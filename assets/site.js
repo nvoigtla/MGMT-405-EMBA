@@ -22,7 +22,7 @@
   /* --- where is the viewer? -------------------------------------------
      Sunrise/sunset needs a latitude and longitude. Asking for the
      geolocation permission on a course page would be intrusive, so the
-     IANA time zone is mapped to the approximate centre of that zone;
+     IANA time zone is mapped to the approximate center of that zone;
      anything unlisted falls back to a longitude derived from the UTC
      offset (15 degrees per hour) at a mid-northern latitude. A few
      degrees of error moves sunrise by minutes, which is immaterial here. */
@@ -154,15 +154,24 @@
   }, 600000);
 
   var btn = null;
-  /* The button names the theme you are LOOKING AT; hovering says what a
-     click would switch to. Until it is clicked the theme follows sunrise
-     and sunset, so the label simply reports whichever that resolved to. */
+  /* The button names the theme you are LOOKING AT; hovering shows a small
+     box saying what a click would switch to. Until it is clicked the theme
+     follows sunrise and sunset, so the label simply reports what that
+     resolved to. */
   function syncBtn() {
     if (!btn) { return; }
     var now = resolve(stored());
-    btn.textContent = now === "dark" ? "Dark" : "Light";
-    btn.setAttribute("title", now === "dark" ? "Switch to Light"
-                                             : "Switch to Dark");
+    var label = document.getElementById("theme-label");
+    var tip = document.getElementById("theme-tip");
+    if (label) {
+      label.textContent = now === "dark" ? "Dark Mode" : "Light Mode";
+    }
+    if (tip) {
+      tip.textContent = now === "dark" ? "Switch to Light Mode"
+                                       : "Switch to Dark Mode";
+    }
+    btn.setAttribute("aria-label", now === "dark" ? "Switch to Light Mode"
+                                                  : "Switch to Dark Mode");
   }
 
   /* ==================================================================

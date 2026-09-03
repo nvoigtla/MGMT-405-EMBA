@@ -1,6 +1,6 @@
 /* MGMT 405 course website -- shared stylesheet.
    Palette and category coding are the lecture decks' and the calendar's:
-   in class = navy, video = pale gold, podcasts = light grey, exam = gold. */
+   in class = navy, video = pale gold, podcasts = light gray, exam = gold. */
 
 /* ============================== tokens ============================== */
 :root{
@@ -165,7 +165,7 @@ a:hover{text-decoration-color:var(--gold)}
 /* ---------------------------- left column ---------------------------- */
 .left{position:sticky; top:74px; display:flex; flex-direction:column; gap:13px}
 
-/* colour-coding legend -- the agenda key from calendar page 1, kept to
+/* color-coding legend -- the agenda key from calendar page 1, kept to
    roughly the height of one week row in the list below it */
 .legend{display:flex; flex-direction:column; gap:5px; font-size:12.5px;
   padding:11px 14px}
@@ -268,7 +268,7 @@ nav.list .gl .t{font-weight:700}
 /* ============================== main ============================== */
 main{min-width:0; display:flex; flex-direction:column; gap:0}
 
-/* ---- the band: identity on the left, what-kind-of-week centred, and the
+/* ---- the band: identity on the left, what-kind-of-week centerd, and the
         page-turn link on the right (2026-09-03, Nico) ---- */
 .band{
   background:var(--navy); border-bottom:4px solid var(--gold);
@@ -282,7 +282,7 @@ main{min-width:0; display:flex; flex-direction:column; gap:0}
   letter-spacing:-.012em; color:#fff;
 }
 .band .sp{font-size:15.5px; font-weight:700; color:var(--palegold)}
-.band .centre{
+.band .center{
   grid-column:2; text-align:center;
   font-family:"Source Sans 3",sans-serif; font-weight:700; font-size:12.5px;
   letter-spacing:.07em; text-transform:uppercase; color:#fff;
@@ -300,7 +300,7 @@ main{min-width:0; display:flex; flex-direction:column; gap:0}
 .band .sub{grid-column:1 / -1; margin:4px 0 0; font-size:15.5px; color:#C3D4E5}
 @media (max-width:820px){
   .band{grid-template-columns:1fr; row-gap:7px}
-  .band .centre,.band .back{grid-column:1; text-align:left; justify-self:start}
+  .band .center,.band .back{grid-column:1; text-align:left; justify-self:start}
 }
 
 .body{display:flex; flex-direction:column; gap:11px; padding-top:13px}
@@ -482,3 +482,16 @@ footer .sep{color:var(--light)}
   margin-left:auto; font-weight:600; font-size:12.5px; letter-spacing:.02em;
   color:#C3D4E5; text-align:right;
 }
+
+/* theme button: the label names the current mode, and hovering pops a small
+   box saying what a click would switch to (2026-09-03, Nico) */
+.themebtn{position:relative}
+.themebtn .tip{
+  position:absolute; top:calc(100% + 9px); right:0; z-index:70;
+  background:var(--surface); color:var(--ink);
+  border:1px solid var(--rule); border-radius:7px;
+  padding:6px 11px; font-size:12.5px; font-weight:400; white-space:nowrap;
+  box-shadow:var(--shadow); opacity:0; visibility:hidden;
+  transition:opacity .12s ease; pointer-events:none;
+}
+.themebtn:hover .tip,.themebtn:focus-visible .tip{opacity:1; visibility:visible}

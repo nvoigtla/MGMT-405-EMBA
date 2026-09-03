@@ -459,9 +459,16 @@ footer .sep{color:var(--light)}
      width, which left the sidebar cards half-width on a phone. */
   .shell{display:flex; flex-direction:column; align-items:stretch;
     padding:12px 14px 26px; gap:16px}
+  /* The search box belongs at the very top on a phone, right under the
+     title bar and ahead of the week's content (2026-09-03, Nico) -- but it
+     lives inside the right column, which on the desktop it must stay in.
+     `display:contents` dissolves that wrapper here, so its two children can
+     be ordered independently of each other. */
+  .right{display:contents}
+  .searchwrap{order:0}
   main{order:1}
   .left{order:2}
-  .right{order:3}
+  #deadlines{order:3}
   nav.list ul{max-height:none}
   .band{padding:10px 13px}
   .cat-bd,.pcard-bd,.panel-bd{padding-left:12px; padding-right:12px}

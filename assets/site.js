@@ -272,6 +272,18 @@
   }
 
   /* ==================================================================
+     The top-right jump menu
+     ================================================================== */
+
+  function initJump() {
+    var sel = document.getElementById("jump");
+    if (!sel) { return; }
+    sel.addEventListener("change", function () {
+      if (sel.value) { window.location.href = sel.value; }
+    });
+  }
+
+  /* ==================================================================
      Week / module list toggle in the left column
      ================================================================== */
 
@@ -320,5 +332,6 @@
     }
     initSearch();
     initToggle();
+    initJump();
   });
 }());

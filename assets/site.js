@@ -154,16 +154,15 @@
   }, 600000);
 
   var btn = null;
+  /* The button names the theme you are LOOKING AT; hovering says what a
+     click would switch to. Until it is clicked the theme follows sunrise
+     and sunset, so the label simply reports whichever that resolved to. */
   function syncBtn() {
     if (!btn) { return; }
-    var m = stored();
-    btn.textContent = m === "auto"
-      ? "Auto · " + (resolve("auto") === "dark" ? "dark" : "light")
-      : (m === "light" ? "Light" : "Dark");
-    btn.setAttribute("title", m === "auto"
-      ? "Following sunrise and sunset in your time zone. Click for light."
-      : (m === "light" ? "Always light. Click for dark."
-                       : "Always dark. Click to follow sunrise and sunset."));
+    var now = resolve(stored());
+    btn.textContent = now === "dark" ? "Dark" : "Light";
+    btn.setAttribute("title", now === "dark" ? "Switch to Light"
+                                             : "Switch to Dark");
   }
 
   /* ==================================================================
@@ -303,7 +302,7 @@
     btn = document.getElementById("theme");
     if (btn) {
       btn.addEventListener("click", function () {
-        var next = { auto: "light", light: "dark", dark: "auto" }[stored()] || "auto";
+        var next = resolve(stored()) === "dark" ? "light" : "dark";
         store(next);
         apply(next);
         syncBtn();

@@ -95,11 +95,11 @@ a:hover{text-decoration-color:var(--gold)}
 /* ============================== shell ============================== */
 .shell{
   max-width:1500px; margin:0 auto; padding:15px 22px 30px;
-  display:grid; grid-template-columns:250px minmax(0,1fr) 244px; gap:22px;
+  display:grid; grid-template-columns:272px minmax(0,1fr) 244px; gap:22px;
   align-items:start;
 }
 @media (max-width:1240px){
-  .shell{grid-template-columns:232px minmax(0,1fr)}
+  .shell{grid-template-columns:252px minmax(0,1fr)}
   .right{grid-column:1 / -1}
 }
 @media (max-width:860px){
@@ -559,3 +559,26 @@ footer .sep{color:var(--light)}
   border:1.5px solid var(--navy);
   background:rgba(11,43,78,.10);
 }
+
+/* ---- the on-campus badge mirrors the color key: a navy rule over a
+        transparent navy wash, not a solid navy block (2026-09-03, Nico) ---- */
+nav.list a[data-kind="oncampus"] .n{
+  background:rgba(11,43,78,.10); color:var(--navy);
+  box-shadow:inset 0 0 0 1.5px var(--navy);
+}
+/* on the highlighted row every badge has to stay legible, whatever its kind */
+nav.list a[aria-current="page"] .n{
+  background:rgba(255,255,255,.18); color:#fff;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.45);
+}
+nav.list .n.gly{font-size:12.5px; line-height:1.35}
+
+/* ---- All Videos / All Podcasts: which week a group came from ---- */
+.grp-lab .wk{
+  display:inline-block; margin-left:9px; font-style:normal; font-weight:600;
+  font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-2); vertical-align:1px; white-space:nowrap;
+}
+
+/* a module with no videos / no podcasts says so, rather than being absent */
+.none-yet{margin:6px 0 2px; font-size:15px; font-style:italic; color:var(--ink-2)}

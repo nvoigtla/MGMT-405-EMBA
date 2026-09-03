@@ -227,7 +227,10 @@
     var btn = document.getElementById("viewmode");
     if (btn) {
       btn.addEventListener("click", function () {
-        setMode(mode === "weeks" ? "mods" : "weeks", true);
+        /* The View by button also returns to the main page, so the new view
+           is applied somewhere it is actually visible (2026-09-03, Nico). */
+        store(mode === "weeks" ? "mods" : "weeks");
+        window.location.href = "index.html?stay=1";
       });
     }
     var bw = document.getElementById("t-weeks");

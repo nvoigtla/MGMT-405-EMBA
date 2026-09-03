@@ -124,6 +124,41 @@
   }
 
   /* ==================================================================
+     Deadlines: show only one week's rows
+
+     On a phone the deadlines column sits below the content, and the week
+     header links down to it. Clicking that link narrows the list to that
+     week alone (2026-09-03, Nico); the "Show all deadlines" button puts
+     the rest back.
+     ================================================================== */
+
+  function initDueFilter() {
+    var card = document.getElementById("deadlines");
+    var all = document.getElementById("dl-all");
+    var link = document.querySelector(".dl-jump a");
+    if (!card) { return; }
+    var rows = card.querySelectorAll(".dl li");
+
+    function only(week) {
+      Array.prototype.forEach.call(rows, function (li) {
+        li.hidden = week !== null && li.getAttribute("data-week") !== week;
+      });
+      if (all) { all.classList.toggle("on", week !== null); }
+    }
+
+    if (link) {
+      /* no preventDefault: the browser still jumps to the anchor, which is
+         this week's own row and therefore still visible after filtering */
+      link.addEventListener("click", function () {
+        only(link.getAttribute("data-week"));
+      });
+    }
+    if (all) {
+      all.addEventListener("click", function () { only(null); });
+    }
+  }
+
+  /* ==================================================================
      SEARCH over every week and module page
      ================================================================== */
 
@@ -225,6 +260,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     initJump();
     initDue();
+    initDueFilter();
     initSearch();
 
     var btn = document.getElementById("viewmode");

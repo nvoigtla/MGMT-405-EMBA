@@ -608,3 +608,50 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
 @media (max-width:700px){
   #deadlines,.dl li[id]{scroll-margin-top:96px}
 }
+
+/* ================= desktop: each column scrolls on its own =================
+   Previously the whole PAGE scrolled and the two side columns were sticky,
+   so the left column only moved once the middle had run out -- the "patchy"
+   scrolling Nico described. Now the viewport is the frame: the top bar and
+   the footer are fixed bands, and the three columns each get their own
+   scroller. The phone layout below 861px is untouched -- there it is one
+   column at a time, content first, then the deadlines. */
+@media (min-width:861px){
+  html,body{height:100%}
+  body{display:flex; flex-direction:column; overflow:hidden}
+  .topbar{flex:none; position:static}
+  .shell{
+    flex:1 1 auto; min-height:0; overflow:hidden;
+    align-items:stretch; padding-bottom:14px;
+  }
+  .left,main,.right{
+    min-height:0; height:100%; overflow-y:auto;
+    overscroll-behavior:contain; padding-bottom:14px;
+  }
+  /* The side columns are flex containers, and a flex child SHRINKS by
+     default -- so the menu card was being squeezed and its rows clipped by
+     its own `overflow:hidden` rather than scrolling. Pin the children to
+     their natural height and let the column do the scrolling. */
+  .left > *,.right > *{flex:none}
+  .left,.right{position:static; top:auto}
+  /* the columns own the scrollbars, so keep them unobtrusive */
+  .left,main,.right{scrollbar-width:thin}
+  footer{flex:none; border-top:1px solid var(--rule); background:var(--surface)}
+}
+
+/* "Show all deadlines" -- only visible while the list is filtered */
+.dl li[hidden]{display:none}
+.dl-all{
+  display:none; width:calc(100% - 14px); margin:6px 7px 9px;
+  font:inherit; font-family:"Source Sans 3",Carlito,system-ui,sans-serif;
+  font-size:13px; font-weight:600; color:var(--ink);
+  background:var(--surface-2); border:1px solid var(--rule);
+  border-radius:7px; padding:7px 10px; cursor:pointer;
+}
+.dl-all.on{display:block}
+.dl-all:hover{border-color:var(--gold)}
+
+/* an outgoing menu row gets a small mark, so it reads as leaving the site */
+nav.list a.out .t::after{
+  content:" ↗"; color:var(--ink-3); font-size:12px;
+}

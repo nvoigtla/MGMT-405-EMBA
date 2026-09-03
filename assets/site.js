@@ -184,12 +184,32 @@
 
     function close() { out.hidden = true; sel = -1; shown = []; }
 
+    /* A bare number has to match as a whole number: the token "6" must not
+       match "26", "16 min" or "Ch. 6.1", or "module 6" hits every page. */
+    function tester(tok) {
+      if (/^[0-9]+$/.test(tok)) {
+        var re = new RegExp("(^|[^0-9])" + tok + "([^0-9.]|$)");
+        return function (hay) { return re.test(hay); };
+      }
+      return function (hay) { return hay.indexOf(tok) !== -1; };
+    }
+
     function render(q) {
       var toks = norm(q).trim().split(/\s+/).filter(Boolean);
       if (!toks.length) { close(); return; }
-      shown = index.filter(function (p) {
-        return toks.every(function (t) { return p.hay.indexOf(t) !== -1; });
-      }).slice(0, 12);
+      var tests = toks.map(tester);
+      var hits = index.filter(function (p) {
+        return tests.every(function (t) { return t(p.hay); });
+      });
+      /* a page whose own name matches comes before one that merely
+         mentions the words somewhere in its content */
+      var phrase = norm(q).trim();
+      hits.forEach(function (p) {
+        p._rank = p.head.indexOf(phrase) !== -1 ? -1
+                : (tests.every(function (t) { return t(p.head); }) ? 0 : 1);
+      });
+      hits.sort(function (a, b) { return a._rank - b._rank; });
+      shown = hits.slice(0, 12);
       if (!shown.length) {
         out.innerHTML = '<div class="none">No page matches “' +
           q.replace(/[<&>]/g, "") + "”.</div>";

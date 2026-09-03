@@ -651,7 +651,11 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
 .dl-all.on{display:block}
 .dl-all:hover{border-color:var(--gold)}
 
-/* an outgoing menu row gets a small mark, so it reads as leaving the site */
-nav.list a.out .t::after{
-  content:" ↗"; color:var(--ink-3); font-size:12px;
+
+/* ---- desktop: a larger top bar (2026-09-03, Nico). The phone keeps the
+        smaller sizes, where the bar has to share a narrow row. ---- */
+@media (min-width:861px){
+  .tb-tag{font-size:19.5px}
+  .tb-sub{font-size:16.5px}
+  .topbar-in{padding:13px 22px}
 }

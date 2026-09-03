@@ -47,54 +47,6 @@
   --gl-badge-bg:#555B66; --gl-badge-ink:#FFFFFF;
   --focus:#1B6FC4;
 }
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#071523; --surface:#0E2439; --surface-2:#123049;
-    --rule:#1F3B56; --rule-soft:#183149;
-    --ink:#E9F1F8; --ink-2:#A7B8C9; --ink-3:#7E90A3;
-    --shadow-sm:0 1px 2px rgba(0,0,0,.45);
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px rgba(0,0,0,.35);
-    --card-video:#3B2F16; --card-podcast:#18293B; --card-read:#0E2439;
-    --card-practice:#0E2439;
-    --card-hd:#16345A; --card-hd-ink:#EAF2FA; --card-glyph:var(--gold);
-    --card-ink:#E9F1F8;
-    --class-body:#143050; --exam-body:#2A2415;
-    --cream-bg:#2A2415; --cream-ink:#F2E5C6; --cream-edge:#4A3D1E;
-    --chip-quiet-bg:#16324B; --chip-quiet-ink:#A7B8C9;
-    --chip-video-bg:#3B2F16; --chip-video-ink:#F0DDB2;
-    --chip-class-bg:#1D4470; --chip-class-ink:#EAF2FA;
-    --accent-ink:#E6B463;
-    --nav-active:#1D4470;
-    --topics-edge:#2C5580;
-    --sw-edge:rgba(255,255,255,.4);
-    --due-edge:#E0655C; --due-bg:rgba(192,0,0,.17);
-    --gl-badge-bg:#5C6875; --gl-badge-ink:#FFFFFF;
-    --focus:#6FB2F0;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#071523; --surface:#0E2439; --surface-2:#123049;
-  --rule:#1F3B56; --rule-soft:#183149;
-  --ink:#E9F1F8; --ink-2:#A7B8C9; --ink-3:#7E90A3;
-  --shadow-sm:0 1px 2px rgba(0,0,0,.45);
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px rgba(0,0,0,.35);
-  --card-video:#3B2F16; --card-podcast:#18293B; --card-read:#0E2439;
-  --card-practice:#0E2439;
-  --card-hd:#16345A; --card-hd-ink:#EAF2FA; --card-glyph:var(--gold);
-  --card-ink:#E9F1F8;
-  --class-body:#143050; --exam-body:#2A2415;
-  --cream-bg:#2A2415; --cream-ink:#F2E5C6; --cream-edge:#4A3D1E;
-  --chip-quiet-bg:#16324B; --chip-quiet-ink:#A7B8C9;
-  --chip-video-bg:#3B2F16; --chip-video-ink:#F0DDB2;
-  --chip-class-bg:#1D4470; --chip-class-ink:#EAF2FA;
-  --accent-ink:#E6B463;
-  --nav-active:#1D4470;
-  --topics-edge:#2C5580;
-  --sw-edge:rgba(255,255,255,.4);
-  --due-edge:#E0655C; --due-bg:rgba(192,0,0,.17);
-  --gl-badge-bg:#5C6875; --gl-badge-ink:#FFFFFF;
-  --focus:#6FB2F0;
-}
 
 /* ============================== base ============================== */
 *{box-sizing:border-box}
@@ -139,13 +91,6 @@ a:hover{text-decoration-color:var(--gold)}
    body link color -- that rendered the name invisible */
 .tb-sub a{color:#DCE7F2; text-decoration-color:rgba(220,231,242,.45)}
 .tb-sub a:hover{color:#fff; text-decoration-color:var(--gold)}
-.themebtn{
-  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.25);
-  color:#fff; border-radius:6px; padding:5px 13px; cursor:pointer;
-  font:inherit; font-size:12.5px; line-height:1.25; white-space:nowrap;
-  min-width:62px;
-}
-.themebtn:hover{background:rgba(255,255,255,.18); border-color:var(--gold)}
 
 /* ============================== shell ============================== */
 .shell{
@@ -366,10 +311,6 @@ main{min-width:0; display:flex; flex-direction:column; gap:0}
   border:2px solid var(--navy); border-radius:11px; padding:12px 13px 13px;
   display:flex; flex-direction:column; gap:10px;
 }
-:root[data-theme="dark"] .prep{border-color:var(--topics-edge)}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]) .prep{border-color:var(--topics-edge)}
-}
 .prep > .head{
   font-family:"Source Sans 3",sans-serif; font-weight:700; font-size:14.5px;
   color:var(--ink); padding-left:3px;
@@ -410,12 +351,6 @@ ul.items a:hover{text-decoration-color:var(--gold)}
   font-variant-numeric:tabular-nums}
 .cat.video .mins{color:#7A6231}
 .tba{font-size:13px; color:var(--ink-3); font-style:italic; white-space:nowrap}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]) .cat.video .mins{color:#D6C296}
-  :root:not([data-theme="light"]) .cat.video ul.items a{text-decoration-color:#8C7442}
-}
-:root[data-theme="dark"] .cat.video .mins{color:#D6C296}
-:root[data-theme="dark"] .cat.video ul.items a{text-decoration-color:#8C7442}
 
 /* ===================== general-logistics page ===================== */
 .gl-grid{display:grid; grid-template-columns:1fr 1fr; gap:11px;
@@ -483,8 +418,7 @@ footer .sep{color:var(--light)}
 @media print{
   body{background:#fff}
   .topbar{position:static}
-  .left,.right,.turn,.themebtn,.band .back{display:none !important}
-  .shell{grid-template-columns:1fr; padding:0; max-width:none}
+  .left,.right,.turn,  .shell{grid-template-columns:1fr; padding:0; max-width:none}
   .cat,.pcard,.prep,.panel{break-inside:avoid}
 }
 @media (prefers-reduced-motion:reduce){
@@ -497,18 +431,6 @@ footer .sep{color:var(--light)}
   color:#C3D4E5; text-align:right;
 }
 
-/* theme button: the label names the current mode, and hovering pops a small
-   box saying what a click would switch to (2026-09-03, Nico) */
-.themebtn{position:relative}
-.themebtn .tip{
-  position:absolute; top:calc(100% + 9px); right:0; z-index:70;
-  background:var(--surface); color:var(--ink);
-  border:1px solid var(--rule); border-radius:7px;
-  padding:6px 11px; font-size:12.5px; font-weight:400; white-space:nowrap;
-  box-shadow:var(--shadow); opacity:0; visibility:hidden;
-  transition:opacity .12s ease; pointer-events:none;
-}
-.themebtn:hover .tip,.themebtn:focus-visible .tip{opacity:1; visibility:visible}
 
 /* a problem set's card: label and the upload line stack, the date stays right */
 .pcard.due .lead{flex:1 1 auto; min-width:0}
@@ -589,10 +511,10 @@ footer .sep{color:var(--light)}
   .tb-right{margin-left:auto}
 }
 @media (max-width:860px){
-  /* On a phone the jump menu IS the navigator: it already carries every
-     week and every module, so the By week / By module box and its two
-     lists come out entirely (2026-09-03, Nico). */
-  .toggle,nav.list{display:none !important}
+  /* On a phone the jump menu IS the navigator, so the whole left menu --
+     the color key and the By Week / By Module choices -- comes out
+     (2026-09-03, Nico). */
+  .left{display:none !important}
 }
 
 /* ---- Deadlines: what is due within the next three days ---- */
@@ -615,3 +537,25 @@ footer .sep{color:var(--light)}
 }
 .dl li.soon .w{color:var(--due-edge)}
 .dl li.soon time{color:var(--due-edge); font-weight:700}
+
+/* ============ the View by Week / View by Module button ============ */
+/* Two lines, so it stays narrow enough for a phone (2026-09-03, Nico). */
+.viewbtn{
+  display:flex; flex-direction:column; align-items:center; line-height:1.14;
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.3);
+  color:#fff; border-radius:7px; padding:4px 13px; cursor:pointer;
+  font:inherit; font-family:"Source Sans 3",Carlito,system-ui,sans-serif;
+  white-space:nowrap;
+}
+.viewbtn .l1{
+  font-size:10px; letter-spacing:.07em; text-transform:uppercase; opacity:.85;
+}
+.viewbtn .l2{font-size:14.5px; font-weight:700}
+.viewbtn:hover{background:rgba(255,255,255,.24); border-color:var(--gold)}
+
+/* The on-campus key mirrors the on-campus CARD -- a navy rule over a
+   transparent navy wash -- not just the card's navy header. */
+.legend .sw.campus{
+  border:1.5px solid var(--navy);
+  background:rgba(11,43,78,.10);
+}

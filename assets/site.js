@@ -43,7 +43,10 @@
     if (!sel || !jumpOptions) { return; }
     var html = "";
     jumpOptions.forEach(function (o) {
-      if (o.group !== "general" && o.group !== mode) { return; }
+      /* "general" and "extra" show in both modes; "extra" is emitted
+         last, so All Videos / All Podcasts close the list */
+      if (o.group !== "general" && o.group !== "extra" &&
+          o.group !== mode) { return; }
       html += '<option value="' + o.value + '"' +
         (o.selected ? " selected" : "") + ">" + o.text + "</option>";
     });

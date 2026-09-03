@@ -168,6 +168,11 @@ nav.list a[data-kind="oncampus"] .n{background:var(--chip-class-bg); color:var(-
 nav.list a[data-kind="deadline"] .n{background:var(--chip-video-bg); color:var(--chip-video-ink)}
 nav.list a[data-kind="midterm"] .n,nav.list a[data-kind="final"] .n{
   background:var(--chip-exam-bg); color:var(--chip-exam-ink)}
+/* Weeks 10 and 11 have no in-person component, so the agenda treats
+   them as video content too (2026-09-03, Nico). */
+nav.list a[data-kind="thanksgiving"] .n,
+nav.list a[data-kind="examprep"] .n{
+  background:var(--chip-video-bg); color:var(--chip-video-ink)}
 nav.list .t{font-size:14px; line-height:1.28; overflow:hidden}
 nav.list .d{display:block; font-size:11.5px; color:var(--ink-3);
   font-variant-numeric:tabular-nums}
@@ -582,3 +587,24 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
 
 /* a module with no videos / no podcasts says so, rather than being absent */
 .none-yet{margin:6px 0 2px; font-size:15px; font-style:italic; color:var(--ink-2)}
+
+/* ---- phone only: a way down to this week's deadlines ----
+   The deadlines column sits below the content on a phone, so the week
+   header offers a link to it (2026-09-03, Nico). */
+.band .dl-jump{display:none}
+@media (max-width:860px){
+  .band .dl-jump{display:block; grid-column:1; justify-self:start}
+  .band .dl-jump a{
+    display:inline-flex; align-items:center; gap:7px; white-space:nowrap;
+    font-family:"Source Sans 3",sans-serif; font-weight:600; font-size:13px;
+    color:#fff; text-decoration:none;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.28);
+    border-radius:7px; padding:5px 11px;
+  }
+  .band .dl-jump a:hover{background:rgba(255,255,255,.22); border-color:var(--gold)}
+}
+/* clear the sticky top bar when jumping to an anchor */
+#deadlines,.dl li[id]{scroll-margin-top:66px}
+@media (max-width:700px){
+  #deadlines,.dl li[id]{scroll-margin-top:96px}
+}

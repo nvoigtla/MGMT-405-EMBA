@@ -272,7 +272,25 @@
   }
 
   /* ==================================================================
-     The top-right jump menu
+     Deadlines: flag anything due within the next three days
+     ================================================================== */
+
+  function initDue() {
+    var rows = document.querySelectorAll(".dl li[data-date]");
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    Array.prototype.forEach.call(rows, function (li) {
+      var iso = li.getAttribute("data-date");
+      if (!iso) { return; }              /* undated, e.g. the practice final */
+      var p = iso.split("-");
+      var due = new Date(+p[0], +p[1] - 1, +p[2]);
+      var days = Math.round((due - today) / 86400000);
+      if (days >= 0 && days <= 3) { li.classList.add("soon"); }
+    });
+  }
+
+  /* ==================================================================
+     The jump menu
      ================================================================== */
 
   function initJump() {
@@ -333,5 +351,6 @@
     initSearch();
     initToggle();
     initJump();
+    initDue();
   });
 }());

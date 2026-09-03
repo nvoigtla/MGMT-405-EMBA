@@ -1,0 +1,460 @@
+/* MGMT 405 course website -- shared stylesheet.
+   Palette and category coding are the lecture decks' and the calendar's:
+   in class = navy, video = pale gold, podcasts = light grey, exam = gold. */
+
+/* ============================== tokens ============================== */
+:root{
+  /* deck palette, verbatim */
+  --navy:#0B2B4E; --gold:#E09F3E; --palegold:#F6E8C9; --cream:#FDF6E6;
+  --gray:#555B66; --light:#C8CDD3; --paleblue:#E7EDF4; --podgray:#EFF1F4;
+  --darkred:#C00000;
+
+  /* surfaces: neutrals biased toward the navy so they read as chosen */
+  --bg:#F1F4F8;
+  --surface:#FFFFFF;
+  --surface-2:#F7F9FC;
+  --rule:#D8DFE8;
+  --rule-soft:#E7ECF3;
+  --ink:#0B2B4E;
+  --ink-2:#4C5867;
+  --ink-3:#77828F;
+  --shadow-sm:0 1px 2px rgba(11,43,78,.08);
+  --shadow:0 1px 2px rgba(11,43,78,.06), 0 6px 18px rgba(11,43,78,.07);
+
+  /* category card bodies */
+  --card-video:var(--palegold);
+  --card-podcast:var(--podgray);
+  --card-read:#FFFFFF;
+  --card-practice:#FFFFFF;
+  --card-hd:var(--navy);
+  --card-hd-ink:#FFFFFF;
+  --card-glyph:var(--palegold);
+  --card-ink:var(--navy);
+
+  --class-body:var(--paleblue);
+  --exam-body:var(--cream);
+  --cream-bg:var(--cream); --cream-ink:var(--navy); --cream-edge:#E4D3A8;
+  --chip-quiet-bg:#EDF1F6; --chip-quiet-ink:#5B6674;
+  --chip-video-bg:var(--palegold); --chip-video-ink:#5E4210;
+  --chip-class-bg:var(--navy); --chip-class-ink:#FFFFFF;
+  --chip-exam-bg:var(--gold); --chip-exam-ink:#3A2405;
+  --accent-ink:#8A5B12;
+  --nav-active:var(--navy); --nav-active-ink:#FFFFFF;
+  --topics-edge:var(--navy);
+  --sw-edge:rgba(11,43,78,.2);
+  --focus:#1B6FC4;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#071523; --surface:#0E2439; --surface-2:#123049;
+    --rule:#1F3B56; --rule-soft:#183149;
+    --ink:#E9F1F8; --ink-2:#A7B8C9; --ink-3:#7E90A3;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.45);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px rgba(0,0,0,.35);
+    --card-video:#3B2F16; --card-podcast:#18293B; --card-read:#0E2439;
+    --card-practice:#0E2439;
+    --card-hd:#16345A; --card-hd-ink:#EAF2FA; --card-glyph:var(--gold);
+    --card-ink:#E9F1F8;
+    --class-body:#143050; --exam-body:#2A2415;
+    --cream-bg:#2A2415; --cream-ink:#F2E5C6; --cream-edge:#4A3D1E;
+    --chip-quiet-bg:#16324B; --chip-quiet-ink:#A7B8C9;
+    --chip-video-bg:#3B2F16; --chip-video-ink:#F0DDB2;
+    --chip-class-bg:#1D4470; --chip-class-ink:#EAF2FA;
+    --accent-ink:#E6B463;
+    --nav-active:#1D4470;
+    --topics-edge:#2C5580;
+    --sw-edge:rgba(255,255,255,.4);
+    --focus:#6FB2F0;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#071523; --surface:#0E2439; --surface-2:#123049;
+  --rule:#1F3B56; --rule-soft:#183149;
+  --ink:#E9F1F8; --ink-2:#A7B8C9; --ink-3:#7E90A3;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.45);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px rgba(0,0,0,.35);
+  --card-video:#3B2F16; --card-podcast:#18293B; --card-read:#0E2439;
+  --card-practice:#0E2439;
+  --card-hd:#16345A; --card-hd-ink:#EAF2FA; --card-glyph:var(--gold);
+  --card-ink:#E9F1F8;
+  --class-body:#143050; --exam-body:#2A2415;
+  --cream-bg:#2A2415; --cream-ink:#F2E5C6; --cream-edge:#4A3D1E;
+  --chip-quiet-bg:#16324B; --chip-quiet-ink:#A7B8C9;
+  --chip-video-bg:#3B2F16; --chip-video-ink:#F0DDB2;
+  --chip-class-bg:#1D4470; --chip-class-ink:#EAF2FA;
+  --accent-ink:#E6B463;
+  --nav-active:#1D4470;
+  --topics-edge:#2C5580;
+  --sw-edge:rgba(255,255,255,.4);
+  --focus:#6FB2F0;
+}
+
+/* ============================== base ============================== */
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:Carlito,Calibri,"Segoe UI",system-ui,sans-serif;
+  font-size:16px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--ink); text-decoration-color:var(--light); text-underline-offset:2px}
+a:hover{text-decoration-color:var(--gold)}
+:focus-visible{outline:2px solid var(--focus); outline-offset:2px; border-radius:3px}
+.lbl{
+  font-family:"Source Sans 3",Carlito,system-ui,sans-serif; font-weight:600;
+  text-transform:uppercase; letter-spacing:.08em; font-size:11px; color:var(--ink-3);
+}
+.num{font-variant-numeric:tabular-nums}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);
+  white-space:nowrap}
+
+/* ============================== top bar ============================== */
+.topbar{
+  background:var(--navy); color:#fff; border-bottom:3px solid var(--gold);
+  position:sticky; top:0; z-index:50;
+}
+.topbar-in{
+  max-width:1500px; margin:0 auto; padding:11px 22px;
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+}
+.tb-tag{
+  font-family:"Source Sans 3",sans-serif; font-weight:700; font-size:15.5px;
+  letter-spacing:.005em; text-decoration:none; color:#fff;
+}
+.tb-tag:hover{text-decoration:underline; text-decoration-color:var(--gold)}
+.tb-sub{font-size:13.5px; color:#B9CADB; margin-left:auto; text-align:right}
+.themebtn{
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.25);
+  color:#fff; border-radius:6px; padding:5px 11px; cursor:pointer;
+  font:inherit; font-size:12.5px; line-height:1.25; white-space:nowrap;
+}
+.themebtn:hover{background:rgba(255,255,255,.18)}
+
+/* =================== sub bar: search at the top right =================== */
+.subbar{
+  max-width:1500px; margin:0 auto; padding:12px 22px 0;
+  display:flex; align-items:center; gap:14px;
+}
+.crumb{font-size:13.5px; color:var(--ink-3)}
+.crumb a{color:var(--ink-2)}
+.searchwrap{position:relative; margin-left:auto; width:min(320px,52vw)}
+.searchwrap input{
+  width:100%; font:inherit; font-size:14.5px; padding:8px 11px 8px 31px;
+  border:1px solid var(--rule); border-radius:8px; background:var(--surface);
+  color:var(--ink); box-shadow:var(--shadow-sm);
+}
+.searchwrap input::placeholder{color:var(--ink-3)}
+.searchwrap .mag{
+  position:absolute; left:10px; top:50%; transform:translateY(-50%);
+  color:var(--ink-3); font-size:14px; pointer-events:none;
+}
+.results{
+  position:absolute; top:calc(100% + 5px); right:0; left:0; z-index:60;
+  background:var(--surface); border:1px solid var(--rule); border-radius:9px;
+  box-shadow:var(--shadow); max-height:min(62vh,430px); overflow-y:auto; padding:5px;
+}
+.results[hidden]{display:none}
+.results a{
+  display:block; padding:7px 10px; border-radius:6px; text-decoration:none;
+  font-size:14.5px;
+}
+.results a:hover,.results a.sel{background:var(--surface-2)}
+.results .k{
+  display:block; font-family:"Source Sans 3",sans-serif; font-weight:600;
+  font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3);
+}
+.results .s{display:block; font-size:12.5px; color:var(--ink-2); margin-top:1px}
+.results .none{padding:11px 10px; font-size:14px; color:var(--ink-2)}
+
+/* ============================== shell ============================== */
+.shell{
+  max-width:1500px; margin:0 auto; padding:14px 22px 30px;
+  display:grid; grid-template-columns:250px minmax(0,1fr) 236px; gap:22px;
+  align-items:start;
+}
+@media (max-width:1240px){
+  .shell{grid-template-columns:232px minmax(0,1fr)}
+  .right{grid-column:1 / -1}
+  .right .card{max-width:none}
+}
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .left,.right{position:static !important}
+}
+
+.card{
+  background:var(--surface); border:1px solid var(--rule); border-radius:10px;
+  box-shadow:var(--shadow-sm);
+}
+.card-hd{padding:9px 14px; border-bottom:1px solid var(--rule-soft)}
+.card-pad{padding:12px 14px}
+
+/* ---------------------------- left column ---------------------------- */
+.left{position:sticky; top:78px; display:flex; flex-direction:column; gap:13px}
+
+/* colour-coding legend -- the agenda key from calendar page 1, kept to
+   roughly the height of one week row in the list below it */
+.legend{display:flex; flex-direction:column; gap:5px; font-size:12.5px}
+.legend div{display:flex; align-items:center; gap:8px}
+.legend .sw{
+  width:15px; height:11px; border-radius:2px; flex:none;
+  border:1px solid var(--sw-edge);
+}
+
+.toggle{
+  display:grid; grid-template-columns:1fr 1fr; padding:4px; background:var(--surface-2);
+  border:1px solid var(--rule); border-radius:9px; gap:2px;
+}
+.toggle button{
+  font:inherit; font-family:"Source Sans 3",sans-serif; font-weight:600; font-size:13.5px;
+  padding:8px 6px; border:0; border-radius:6px; background:transparent; color:var(--ink-2);
+  cursor:pointer;
+}
+.toggle button[aria-pressed="true"]{
+  background:var(--nav-active); color:var(--nav-active-ink); box-shadow:var(--shadow-sm);
+}
+
+nav.list ul{list-style:none; margin:0; padding:6px; display:flex; flex-direction:column; gap:1px}
+nav.list a{
+  display:grid; grid-template-columns:27px minmax(0,1fr); gap:9px; align-items:center;
+  padding:6px 8px; border-radius:7px; text-decoration:none; color:var(--ink);
+}
+nav.list a:hover{background:var(--surface-2)}
+nav.list a[aria-current="page"]{
+  background:var(--nav-active); color:var(--nav-active-ink); box-shadow:var(--shadow-sm);
+}
+nav.list a[aria-current="page"] .d,nav.list a[aria-current="page"] .n{color:inherit}
+nav.list .n{
+  font-family:"Source Sans 3",sans-serif; font-weight:700; font-size:12px;
+  text-align:center; border-radius:4px; padding:2px 0; color:var(--chip-quiet-ink);
+  background:var(--chip-quiet-bg); font-variant-numeric:tabular-nums;
+}
+nav.list a[data-kind="oncampus"] .n{background:var(--chip-class-bg); color:var(--chip-class-ink)}
+nav.list a[data-kind="deadline"] .n{background:var(--chip-video-bg); color:var(--chip-video-ink)}
+nav.list a[data-kind="midterm"] .n,nav.list a[data-kind="final"] .n{
+  background:var(--chip-exam-bg); color:var(--chip-exam-ink)}
+nav.list .t{font-size:14px; line-height:1.28; overflow:hidden}
+nav.list .d{display:block; font-size:11.5px; color:var(--ink-3);
+  font-variant-numeric:tabular-nums}
+nav.list a[aria-current="page"] .d{color:#C3D4E5}
+nav.list .gl .n{background:var(--gold); color:#3A2405}
+nav.list .gl .t{font-weight:700}
+
+/* ---------------------------- right column --------------------------- */
+.right{position:sticky; top:78px}
+.dl{list-style:none; margin:0; padding:0; font-size:13.5px}
+.dl li{padding:8px 14px; border-top:1px solid var(--rule-soft)}
+.dl li:first-child{border-top:0}
+.dl li.here{background:var(--cream-bg); color:var(--cream-ink)}
+.dl .w{font-family:"Source Sans 3",sans-serif; font-size:10.5px; font-weight:600;
+  letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3)}
+.dl li.here .w{color:var(--accent-ink)}
+.dl .lb{display:block; margin-top:1px}
+.dl .lb a{text-decoration:none}
+.dl .lb a:hover{text-decoration:underline; text-decoration-color:var(--gold)}
+.dl .ex .lb{font-weight:700}
+.dl time{display:block; font-size:12.5px; color:var(--ink-2); margin-top:1px;
+  font-variant-numeric:tabular-nums}
+.dl li.here time{color:var(--accent-ink)}
+
+/* ============================== main ============================== */
+main{min-width:0; display:flex; flex-direction:column; gap:0}
+
+/* page turn links */
+.turn{display:flex; margin-bottom:10px}
+.turn.bottom{margin:16px 0 0}
+.turn a{
+  margin-left:auto; display:inline-flex; align-items:center; gap:7px;
+  font-family:"Source Sans 3",sans-serif; font-weight:600; font-size:13.5px;
+  background:var(--surface); border:1px solid var(--rule); border-radius:8px;
+  padding:7px 13px; text-decoration:none; box-shadow:var(--shadow-sm); color:var(--ink);
+}
+.turn a:hover{border-color:var(--gold)}
+.turn a .ar{color:var(--gold); font-size:12px}
+
+/* week / module band -- the calendar's navy band with its gold underline */
+.band{
+  background:var(--navy); border-bottom:4px solid var(--gold);
+  border-radius:9px 9px 0 0; padding:12px 18px; color:#fff;
+  display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  box-shadow:var(--shadow-sm);
+}
+.band h1{
+  margin:0; font-size:clamp(21px,2.2vw,27px); font-weight:700; line-height:1.16;
+  letter-spacing:-.012em; color:#fff;
+}
+.band .sp{font-size:16px; font-weight:700; color:var(--palegold)}
+.band .kind{
+  margin-left:auto; font-family:"Source Sans 3",sans-serif; font-weight:700;
+  font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:#fff;
+}
+.band .sub{width:100%; margin:0; font-size:15.5px; color:#C3D4E5}
+
+.body{display:flex; flex-direction:column; gap:11px; padding-top:13px}
+
+/* plain cards: topics, due, exam, holiday, class */
+.pcard{border-radius:10px; overflow:hidden; box-shadow:var(--shadow-sm);
+  border:1px solid var(--rule)}
+.pcard-hd{
+  padding:9px 15px; display:flex; align-items:baseline; gap:11px; flex-wrap:wrap;
+  font-family:"Source Sans 3",sans-serif; font-weight:700; font-size:14.5px;
+}
+.pcard-hd .when{font-weight:600; font-size:12.5px; letter-spacing:.03em; opacity:.92}
+.pcard-bd{padding:10px 15px 13px}
+.pcard.topics{background:var(--surface); border-color:var(--topics-edge)}
+.pcard.topics .pcard-bd{padding:12px 15px}
+.pcard.topics h2{margin:0 0 5px; font-size:15px; font-family:"Source Sans 3",sans-serif;
+  font-weight:700; color:var(--ink)}
+.pcard.topics ul{list-style:none; margin:0; padding:0}
+.pcard.topics li{font-size:16px; padding:2px 0}
+.pcard.due{background:var(--surface); border:2px solid var(--gold)}
+.pcard.due .pcard-bd{padding:10px 15px; display:flex; gap:10px; flex-wrap:wrap;
+  align-items:baseline; font-size:15.5px}
+.pcard.due b{font-weight:700}
+.pcard.due .g{color:var(--accent-ink)}
+.pcard.due time{margin-left:auto; font-size:14px; color:var(--ink-2);
+  font-variant-numeric:tabular-nums}
+.pcard.class .pcard-hd{background:var(--navy); color:#fff}
+.pcard.class .pcard-bd{background:var(--class-body)}
+.pcard.exam{border-color:var(--gold)}
+.pcard.exam .pcard-hd{background:var(--gold); color:#3A2405}
+.pcard.exam .pcard-bd{background:var(--exam-body); color:var(--cream-ink)}
+.pcard.holiday .pcard-hd{background:var(--chip-quiet-bg); color:var(--ink-2)}
+.pcard.holiday .pcard-bd{background:var(--surface-2); font-style:italic; color:var(--ink-2)}
+.pcard.videos .pcard-hd{background:var(--navy); color:#fff}
+.pcard.videos .pcard-bd{background:var(--card-video)}
+
+/* preparation container -- the calendar's thick-navy transparent box */
+.prep{
+  border:2px solid var(--navy); border-radius:11px; padding:12px 13px 13px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.prep > .head{
+  font-family:"Source Sans 3",sans-serif; font-weight:700; font-size:14.5px;
+  color:var(--ink); padding-left:3px;
+}
+.prep > .head .when{font-weight:600; color:var(--ink-2); font-size:13.5px}
+
+/* ===================== category cards (calendar format) ===================== */
+.cat{border-radius:10px; overflow:hidden; box-shadow:var(--shadow-sm);
+  border:1px solid var(--rule)}
+.cat-hd{
+  background:var(--card-hd); color:var(--card-hd-ink);
+  padding:8px 14px; display:flex; align-items:center; gap:10px;
+  font-family:"Source Sans 3",sans-serif; font-weight:700; font-size:14.5px;
+}
+.cat-hd .cg{font-size:16px; line-height:1; color:var(--card-glyph)}
+.cat-bd{padding:8px 15px 12px; color:var(--card-ink)}
+.cat.video .cat-bd{background:var(--card-video)}
+.cat.podcast .cat-bd{background:var(--card-podcast)}
+.cat.read .cat-bd{background:var(--card-read)}
+.cat.practice .cat-bd{background:var(--card-practice)}
+
+/* groups inside a card: the italic navy lead-in, then the bullets */
+.grp + .grp{margin-top:9px}
+.grp-lab{
+  font-style:italic; font-weight:700; font-size:15.5px; color:var(--card-ink);
+  margin:0 0 3px;
+}
+.budget{margin:3px 0 0 18px; font-size:12.5px; font-style:italic; color:var(--ink-3)}
+.cat.video .budget{color:#7A6231}
+:root[data-theme="dark"] .cat.video .budget{color:#C9B486}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .cat.video .budget{color:#C9B486}
+  :root:not([data-theme="light"]) .cat.video .mins{color:#D6C296}
+  :root:not([data-theme="light"]) .cat.video ul.items a{text-decoration-color:#8C7442}
+}
+:root[data-theme="dark"] .cat.video .mins{color:#D6C296}
+:root[data-theme="dark"] .cat.video ul.items a{text-decoration-color:#8C7442}
+ul.items{list-style:none; margin:0; padding:0}
+ul.items li{
+  display:grid; grid-template-columns:17px minmax(0,1fr); gap:9px;
+  align-items:baseline; padding:3px 0;
+}
+ul.items .g{color:var(--gold); font-size:11.5px; text-align:center; line-height:1.6}
+ul.items li.note{color:var(--ink-2); font-style:italic}
+ul.items li.topic .txt{font-weight:700}
+ul.items .txt{font-size:16px}
+ul.items a{text-decoration:underline; text-decoration-thickness:1px;
+  text-decoration-color:var(--light)}
+ul.items a:hover{text-decoration-color:var(--gold)}
+.cat.video ul.items a{text-decoration-color:#CDAE72}
+.mins{font-size:13px; color:var(--ink-2); white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.cat.video .mins{color:#7A6231}
+.tba{font-size:13px; color:var(--ink-3); font-style:italic; white-space:nowrap}
+
+/* ===================== general-logistics page ===================== */
+.gl-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:11px}
+.panel{
+  background:var(--surface); border:1px solid var(--rule); border-radius:10px;
+  box-shadow:var(--shadow-sm); padding:15px 17px;
+}
+.panel h2{
+  margin:0 0 9px; font-family:"Source Sans 3",sans-serif; font-size:15px;
+  font-weight:700; letter-spacing:.02em; color:var(--ink);
+}
+.panel p{margin:0 0 9px; font-size:15.5px; color:var(--ink-2)}
+.panel p:last-child{margin-bottom:0}
+.panel ul{margin:0; padding-left:19px; font-size:15.5px; color:var(--ink-2)}
+.panel ul li{margin-bottom:5px}
+.panel dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:6px 13px;
+  font-size:15px}
+.panel dt{font-family:"Source Sans 3",sans-serif; font-size:10.5px; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); padding-top:3px}
+.panel dd{margin:0; color:var(--ink-2)}
+.panel dd b{color:var(--ink)}
+.qlinks{display:flex; flex-direction:column; gap:8px; font-size:15px}
+.qlinks a{display:flex; gap:9px; align-items:baseline; text-decoration:none}
+.qlinks a:hover .u{text-decoration:underline; text-decoration-color:var(--gold)}
+.qlinks .g{color:var(--gold); width:15px; flex:none; text-align:center; font-size:13px}
+.note-strip{
+  background:var(--cream-bg); color:var(--cream-ink); border:1px solid var(--cream-edge);
+  border-radius:9px; padding:11px 15px; box-shadow:var(--shadow-sm); font-size:15px;
+}
+
+footer{
+  max-width:1500px; margin:0 auto; padding:4px 22px 34px;
+  color:var(--ink-3); font-size:13px; display:flex; gap:12px; flex-wrap:wrap;
+}
+footer .sep{color:var(--light)}
+
+/* ============================== print ============================== */
+@media print{
+  body{background:#fff}
+  .topbar{position:static}
+  .left,.right,.subbar,.turn,.themebtn{display:none !important}
+  .shell{grid-template-columns:1fr; padding:0; max-width:none}
+  .cat,.pcard,.prep{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important; animation:none !important}
+}
+
+/* ===================== module pages ===================== */
+.pills{display:flex; gap:7px; flex-wrap:wrap}
+.pill{
+  font-family:"Source Sans 3",sans-serif; font-size:11.5px; font-weight:700;
+  letter-spacing:.05em; text-transform:uppercase; border-radius:20px;
+  padding:3px 11px; white-space:nowrap; box-shadow:var(--shadow-sm);
+}
+.pill.class{background:var(--chip-class-bg); color:var(--chip-class-ink)}
+.pill.video{background:var(--chip-video-bg); color:var(--chip-video-ink)}
+
+.mwk{display:flex; flex-direction:column; gap:10px; margin-top:6px}
+.mwk-hd{
+  display:flex; align-items:baseline; gap:11px; flex-wrap:wrap;
+  border-bottom:2px solid var(--rule); padding-bottom:5px;
+}
+.mwk-hd a{
+  font-family:"Source Sans 3",sans-serif; font-weight:700; font-size:15px;
+  text-decoration:none; color:var(--ink);
+}
+.mwk-hd a:hover{color:var(--accent-ink); text-decoration:underline;
+  text-decoration-color:var(--gold)}
+.mwk-hd .d{font-size:13px; color:var(--ink-3)}
+.mwk-topics{margin:0; font-size:15.5px; font-style:italic; color:var(--ink-2)}
+
+/* a group with no category (exam prep, TA review sessions) gets a plain card */
+.cat.other{background:var(--surface)}
+.cat.other .cat-bd{background:var(--surface); color:var(--ink)}

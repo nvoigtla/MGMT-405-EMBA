@@ -401,8 +401,9 @@ ul.items a:hover{text-decoration-color:var(--gold)}
 :root[data-theme="dark"] .cat.video ul.items a{text-decoration-color:#8C7442}
 
 /* ===================== general-logistics page ===================== */
-.gl-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(292px,1fr));
-  gap:11px; align-items:start}
+.gl-grid{display:grid; grid-template-columns:1fr 1fr; gap:11px;
+  align-items:start}
+@media (max-width:820px){.gl-grid{grid-template-columns:1fr}}
 .panel{
   background:var(--surface); border:1px solid var(--rule); border-radius:10px;
   box-shadow:var(--shadow-sm); overflow:hidden;
@@ -427,13 +428,9 @@ ul.items a:hover{text-decoration-color:var(--gold)}
 .qlinks a{display:flex; gap:9px; align-items:baseline; text-decoration:none}
 .qlinks a:hover .u{text-decoration:underline; text-decoration-color:var(--gold)}
 .qlinks .g{color:var(--gold); width:15px; flex:none; text-align:center; font-size:13px}
-.syllabus{
-  background:var(--cream-bg); color:var(--cream-ink); border:1px solid var(--cream-edge);
-  border-radius:9px; padding:11px 15px; box-shadow:var(--shadow-sm); font-size:16px;
-  display:flex; align-items:baseline; gap:10px;
-}
-.syllabus .g{color:var(--accent-ink)}
-.syllabus a{font-weight:700; color:var(--cream-ink)}
+/* two half-width boxes side by side, above the three columns */
+.gl-row{display:grid; grid-template-columns:1fr 1fr; gap:11px}
+@media (max-width:700px){.gl-row{grid-template-columns:1fr}}
 
 /* ===================== module pages ===================== */
 .pills{display:flex; gap:7px; flex-wrap:wrap}
@@ -495,3 +492,45 @@ footer .sep{color:var(--light)}
   transition:opacity .12s ease; pointer-events:none;
 }
 .themebtn:hover .tip,.themebtn:focus-visible .tip{opacity:1; visibility:visible}
+
+/* a problem set's card: label and the upload line stack, the date stays right */
+.pcard.due .lead{flex:1 1 auto; min-width:0}
+.pcard.due .upload{
+  margin:3px 0 0; font-size:14px; color:var(--ink-2); font-weight:400;
+}
+.pcard.due .upload a{font-weight:700; color:var(--ink)}
+
+/* ============================== phones ============================== */
+/* A long header line (the class times and room) has to be able to wrap. */
+.box-hd{flex-wrap:wrap}
+@media (max-width:640px){
+  .box-hd .when{margin-left:0; width:100%; text-align:left}
+}
+
+@media (max-width:860px){
+  /* Content first on a phone; then the week / module list, then the
+     search box and deadlines. Nobody should have to scroll past a
+     13-item navigator to reach the week they opened. */
+  /* align-items:start on .shell stops flex children from filling the
+     width, which left the sidebar cards half-width on a phone. */
+  .shell{display:flex; flex-direction:column; align-items:stretch;
+    padding:12px 14px 26px; gap:16px}
+  main{order:1}
+  .left{order:2}
+  .right{order:3}
+  nav.list ul{max-height:none}
+  .band{padding:10px 13px}
+  .cat-bd,.pcard-bd,.panel-bd{padding-left:12px; padding-right:12px}
+  .prep{padding:10px 9px 11px}
+  ul.items .txt{font-size:15.5px}
+  .results{width:100%}
+}
+@media (max-width:700px){
+  .tb-sub{display:none}          /* the byline is in the footer as well */
+}
+@media (max-width:420px){
+  body{font-size:15.5px}
+  .topbar-in{padding:9px 14px; gap:10px}
+  .band h1{font-size:20px}
+  footer{padding:4px 14px 28px}
+}

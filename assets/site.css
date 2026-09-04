@@ -733,3 +733,8 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
   .helpbtn .q{font-size:30px; top:0; left:4px}
   .helpbtn .m{font-size:26px; bottom:1px; right:3px}
 }
+
+/* an email link only becomes a link once site.js has assembled its address;
+   until then it is inert text, so give it the pointer only when it is live */
+a.mail{cursor:default}
+a.mail[href]{cursor:pointer}

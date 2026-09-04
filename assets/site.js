@@ -159,6 +159,26 @@
   }
 
   /* ==================================================================
+     Email links, assembled at load
+
+     The HTML carries no address and no "@" -- each link holds the local
+     part and the domain base64-encoded in data attributes, so an address
+     harvester scanning the page finds nothing to take (2026-09-04, Nico).
+     ================================================================== */
+
+  function initMail() {
+    var links = document.querySelectorAll("a.mail[data-u][data-d]");
+    Array.prototype.forEach.call(links, function (a) {
+      try {
+        var user = atob(a.getAttribute("data-u"));
+        var dom = atob(a.getAttribute("data-d"));
+        a.setAttribute("href", "mailto:" + user + "@" + dom);
+        a.setAttribute("title", user + "@" + dom);
+      } catch (e) { /* leave it as inert text */ }
+    });
+  }
+
+  /* ==================================================================
      The help popover in the top bar
      ================================================================== */
 
@@ -286,6 +306,7 @@
 
   /* ------------------------------ wire up ------------------------------ */
   document.addEventListener("DOMContentLoaded", function () {
+    initMail();
     initJump();
     initDue();
     initDueFilter();

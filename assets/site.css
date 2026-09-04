@@ -726,6 +726,10 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
         The two glyphs sit in opposite corners and are horizontally
         disjoint, so growing them cannot make them collide. ---- */
 @media (min-width:861px){
-  .helpbtn .q{font-size:23px; top:2px; left:5px}
-  .helpbtn .m{font-size:20px; bottom:2px; right:4px}
+  /* 30% up again (2026-09-04, Nico), which nearly fills the 48px box -- so
+     the insets tighten to keep both glyphs inside it. They stay in opposite
+     corners and remain horizontally disjoint, checked by measuring the
+     rendered boxes rather than by eye. */
+  .helpbtn .q{font-size:30px; top:0; left:4px}
+  .helpbtn .m{font-size:26px; bottom:1px; right:3px}
 }

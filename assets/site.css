@@ -719,3 +719,13 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
 .band .center.big{
   font-size:17px; letter-spacing:.05em;
 }
+
+/* ---- desktop only: the same 48px box, but both marks drawn larger
+        (2026-09-04, Nico). The desktop top bar carries bigger text than the
+        phone's, so the button needs more weight to hold its own beside it.
+        The two glyphs sit in opposite corners and are horizontally
+        disjoint, so growing them cannot make them collide. ---- */
+@media (min-width:861px){
+  .helpbtn .q{font-size:23px; top:2px; left:5px}
+  .helpbtn .m{font-size:20px; bottom:2px; right:4px}
+}

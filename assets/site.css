@@ -628,10 +628,20 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
   html,body{height:100%}
   body{display:flex; flex-direction:column; overflow:hidden}
   .topbar{flex:none; position:static}
+  /* `margin:0 auto` on a flex item sizes it to its CONTENT on the cross
+     axis instead of stretching, so the whole grid used to be as wide as
+     that page's content happened to need -- the left column started at
+     x=143 on week 1 and x=22 on week 11. An explicit width pins it, and
+     max-width + auto margins still centre it on a wide screen
+     (2026-09-04, Nico). */
   .shell{
-    flex:1 1 auto; min-height:0; overflow:hidden;
+    flex:1 1 auto; min-height:0; overflow:hidden; width:100%;
     align-items:stretch; padding-bottom:14px;
   }
+  footer{width:100%}          /* same trap: it was a narrow centred strip */
+  /* reserve the scrollbar gutter so a column that happens to overflow does
+     not shift its own contents sideways relative to one that does not */
+  .left,main,.right{scrollbar-gutter:stable}
   .left,main,.right{
     min-height:0; height:100%; overflow-y:auto;
     overscroll-behavior:contain; padding-bottom:14px;
@@ -738,3 +748,12 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
    until then it is inert text, so give it the pointer only when it is live */
 a.mail{cursor:default}
 a.mail[href]{cursor:pointer}
+
+/* a name must not split across lines either, or "Prof." and "Nico" part company */
+a.mail.who{white-space:nowrap}
+
+/* `.qlinks a` is styled as a flex ROW (glyph + label) for the link lists.
+   A mail link is inline text inside a sentence, and inheriting display:flex
+   turned it into a BLOCK -- which forced a line break before the name, and
+   looked like a stray <br>. Keep it inline (2026-09-04, Nico). */
+.qlinks a.mail{display:inline; gap:0}

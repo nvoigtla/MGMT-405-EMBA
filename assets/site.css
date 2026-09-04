@@ -666,3 +666,6 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
   .tb-sub{font-size:16.5px}
   .topbar-in{padding:13px 22px}
 }
+
+/* a non-link row inside a qlinks list (the "ask Prof. Nico" line) */
+.qlinks .row{display:flex; gap:9px; align-items:baseline; color:var(--ink-2)}

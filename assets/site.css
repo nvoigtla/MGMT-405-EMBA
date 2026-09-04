@@ -80,7 +80,8 @@ a:hover{text-decoration-color:var(--gold)}
   gap:14px;
 }
 .tb-left{display:flex; align-items:center; gap:13px; min-width:0}
-.tb-right{display:flex; justify-content:flex-end}
+.tb-right{display:flex; justify-content:flex-end; align-items:center;
+  gap:12px}
 .tb-tag{
   font-family:"Source Sans 3",sans-serif; font-weight:700; font-size:15.5px;
   letter-spacing:.005em; text-decoration:none; color:#fff;
@@ -685,7 +686,8 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
   display:flex; align-items:center; justify-content:center;
   width:38px; height:38px; border-radius:7px; cursor:pointer;
   background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.3);
-  color:#fff; font:inherit; font-size:17px; line-height:1;
+  color:#fff; font:inherit; font-size:20px; font-weight:700; line-height:1;
+  font-family:"Source Sans 3",Carlito,system-ui,sans-serif;
 }
 .helpbtn:hover{background:rgba(255,255,255,.26); border-color:var(--gold)}
 .helpbtn[aria-expanded="true"]{background:rgba(255,255,255,.3); border-color:var(--gold)}

@@ -159,6 +159,34 @@
   }
 
   /* ==================================================================
+     The help popover in the top bar
+     ================================================================== */
+
+  function initHelp() {
+    var btn = document.getElementById("helpbtn");
+    var pop = document.getElementById("helppop");
+    if (!btn || !pop) { return; }
+
+    function set(open) {
+      pop.hidden = !open;
+      btn.setAttribute("aria-expanded", String(open));
+    }
+
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      set(pop.hidden);
+    });
+    document.addEventListener("click", function (e) {
+      if (!pop.hidden && !pop.contains(e.target) && !btn.contains(e.target)) {
+        set(false);
+      }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") { set(false); }
+    });
+  }
+
+  /* ==================================================================
      SEARCH over every week and module page
      ================================================================== */
 
@@ -261,6 +289,7 @@
     initJump();
     initDue();
     initDueFilter();
+    initHelp();
     initSearch();
 
     var btn = document.getElementById("viewmode");

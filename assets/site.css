@@ -787,14 +787,25 @@ a.mail.who{white-space:nowrap}
 
 @media (min-width:861px) and (max-width:1240px){
   .sidebtn{display:inline-flex}
+
+  /* The column becomes a bottom-right stack. The SEARCH BOX stays visible
+     down here -- only the deadlines card hides behind the button, so search
+     does not need a panel opened to reach it (2026-09-04, Nico). */
   .right{
     position:fixed; right:18px; bottom:64px; top:auto; z-index:77;
     width:min(330px,calc(100vw - 36px));
-    height:auto;                      /* the desktop block sets 100% */
-    max-height:min(72vh,640px); overflow-y:auto;
-    background:var(--bg); border:1px solid var(--rule);
-    border-radius:11px; box-shadow:var(--shadow);
-    padding:11px; display:none;
+    display:flex; flex-direction:column-reverse; gap:10px; align-items:stretch;
+    /* the desktop block sets height:100% and its own scrolling; neither
+       applies to a corner stack, and overflow would clip the results list */
+    height:auto; overflow:visible; padding-bottom:0;
   }
-  body.sidebar-open .right{display:flex}
+  /* column-reverse puts the first child last, so the search box sits
+     directly above the button and the deadlines card grows upward from it
+     -- opening the panel never shifts the search box. */
+  .right #deadlines{display:none}
+  body.sidebar-open .right #deadlines{
+    display:block; max-height:min(66vh,560px); overflow-y:auto;
+  }
+  /* down here there is no room below the input, so the hits open upward */
+  .searchwrap .results{top:auto; bottom:calc(100% + 5px)}
 }

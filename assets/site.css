@@ -682,38 +682,20 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
 
 /* ---- the help button in the top bar, and its popover ---- */
 .helpwrap{position:relative; display:flex; flex:none; align-items:stretch}
-/* The help button is a split box: "?" in the top-left corner, the envelope
-   in the bottom-right, and a hairline along the bottom-left / top-right
-   diagonal between them (2026-09-04, Nico). It matches the View by button's
-   height by stretching, and is deliberately narrower.
-
-   The divider is a linear-gradient whose AXIS runs to the bottom right --
-   its colour bands are perpendicular to that axis, which puts the line on
-   the bottom-left-to-top-right diagonal. Using `to top right` would draw
-   the other diagonal. */
+/* The help button holds the two marks side by side, in a box just wide
+   enough for them (2026-09-04, Nico). It still stretches to the View by
+   button's height so the top bar stays level; only the width hugs the
+   content. */
 .helpbtn{
-  position:relative; align-self:stretch;
-  width:46px; padding:0; border-radius:7px; cursor:pointer; overflow:hidden;
+  align-self:stretch;
+  display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  width:auto; padding:0 11px; border-radius:7px; cursor:pointer;
   background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.3);
   color:#fff; font:inherit; line-height:1;
   font-family:"Source Sans 3",Carlito,system-ui,sans-serif;
 }
-.helpbtn::before{
-  content:""; position:absolute; inset:0; pointer-events:none;
-  background:linear-gradient(to bottom right,
-    transparent calc(50% - 0.5px),
-    rgba(255,255,255,.5) calc(50% - 0.5px),
-    rgba(255,255,255,.5) calc(50% + 0.5px),
-    transparent calc(50% + 0.5px));
-}
-.helpbtn .q{
-  position:absolute; top:3px; left:6px;
-  font-size:15px; font-weight:700; line-height:1;
-}
-.helpbtn .m{
-  position:absolute; bottom:3px; right:5px;
-  font-size:14px; line-height:1;
-}
+.helpbtn .q{font-size:17px; font-weight:700; line-height:1}
+.helpbtn .m{font-size:15px; line-height:1}
 .helpbtn:hover{background:rgba(255,255,255,.26); border-color:var(--gold)}
 .helpbtn[aria-expanded="true"]{background:rgba(255,255,255,.3); border-color:var(--gold)}
 .helppop{

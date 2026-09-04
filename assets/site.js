@@ -67,7 +67,13 @@
   function paintViewBtn() {
     var btn = document.getElementById("viewmode");
     var label = document.getElementById("viewmode-label");
+    var tip = document.getElementById("viewmode-tip");
     if (label) { label.textContent = mode === "mods" ? "Module" : "Week"; }
+    if (tip) {
+      tip.textContent = mode === "mods"
+        ? "Switch to view by Week"
+        : "Switch to view by Module";
+    }
     if (btn) {
       btn.setAttribute("aria-label", mode === "mods"
         ? "Viewing by module. Switch to viewing by week."
@@ -299,8 +305,67 @@
       if (e.key === "/" && e.target.tagName !== "INPUT" &&
           !e.metaKey && !e.ctrlKey && !e.altKey) {
         e.preventDefault();
+        /* the search box lives in the sidebar, which may be minimized */
+        if (sidebarBtn()) { openSidebar(true); }
         box.focus();
       }
+    });
+  }
+
+  /* ==================================================================
+     The sidebar panel (narrow desktop windows)
+     ==================================================================
+     Between 861 and 1240px the CSS parks the whole right column -- search
+     box and deadlines card -- behind a bottom-right button rather than
+     letting it eat half the content column's height. The button is
+     display:none outside that band, so its computed display tells us
+     whether we are in panel mode without duplicating the breakpoint
+     here.
+     (2026-09-04, Nico.) */
+
+  function sidebarBtn() {
+    var b = document.getElementById("sidebtn");
+    /* Test the computed display, NOT offsetParent: the button is
+       position:fixed, and offsetParent is null for a fixed element by
+       spec -- which made this read "not in panel mode" at every width. */
+    if (!b || getComputedStyle(b).display === "none") { return null; }
+    return b;
+  }
+
+  function openSidebar(open) {
+    var b = document.getElementById("sidebtn");
+    if (!b) { return; }
+    document.body.classList.toggle("sidebar-open", open);
+    b.setAttribute("aria-expanded", String(open));
+  }
+
+  function initSidebar() {
+    var btn = document.getElementById("sidebtn");
+    if (!btn) { return; }
+
+    btn.addEventListener("click", function () {
+      openSidebar(!document.body.classList.contains("sidebar-open"));
+    });
+
+    /* Escape closes it, and so does a click anywhere outside the panel --
+       it overlays the content, so it should not sit there once the reader
+       has gone back to reading. */
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") { openSidebar(false); }
+    });
+    document.addEventListener("click", function (e) {
+      if (!document.body.classList.contains("sidebar-open")) { return; }
+      if (e.target === btn || btn.contains(e.target)) { return; }
+      var right = document.querySelector(".right");
+      if (right && right.contains(e.target)) { return; }
+      openSidebar(false);
+    });
+
+    /* Widening the window past the breakpoint hides the button, and the
+       sidebar goes back into its own column -- drop the class so it is not
+       still "open" when the window narrows again. */
+    window.addEventListener("resize", function () {
+      if (!sidebarBtn()) { openSidebar(false); }
     });
   }
 
@@ -312,6 +377,7 @@
     initDueFilter();
     initHelp();
     initSearch();
+    initSidebar();
 
     var btn = document.getElementById("viewmode");
     if (btn) {

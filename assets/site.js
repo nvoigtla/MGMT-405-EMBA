@@ -305,6 +305,8 @@
       if (e.key === "/" && e.target.tagName !== "INPUT" &&
           !e.metaKey && !e.ctrlKey && !e.altKey) {
         e.preventDefault();
+        /* the search box lives in the sidebar, which may be minimized */
+        if (sidebarBtn()) { openSidebar(true); }
         box.focus();
       }
     });
@@ -313,11 +315,10 @@
   /* ==================================================================
      The sidebar panel (narrow desktop windows)
      ==================================================================
-     Between 861 and 1240px there is no room for a third column, so the
-     CSS turns the right column into a bottom-right stack: the search box
-     stays visible and the deadlines card hides behind this button, rather
-     than the column becoming a second grid row and eating half the content
-     column's height. The button is
+     Between 861 and 1240px the CSS parks the whole right column -- search
+     box and deadlines card -- in a panel behind a bottom-right button,
+     rather than letting the column become a second grid row and eat half
+     the content column's height. The button is
      display:none outside that band, so its computed display tells us
      whether we are in panel mode without duplicating the breakpoint
      here.

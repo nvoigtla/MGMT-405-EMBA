@@ -788,24 +788,22 @@ a.mail.who{white-space:nowrap}
 @media (min-width:861px) and (max-width:1240px){
   .sidebtn{display:inline-flex}
 
-  /* The column becomes a bottom-right stack. The SEARCH BOX stays visible
-     down here -- only the deadlines card hides behind the button, so search
-     does not need a panel opened to reach it (2026-09-04, Nico). */
+  /* The WHOLE column -- search box and deadlines card -- becomes a panel
+     behind the button. A first version left the search box out in the
+     corner on its own; with nothing framing it, it read as invisible
+     (2026-09-05, Nico), so both go back inside the panel and the button
+     names both. */
   .right{
     position:fixed; right:18px; bottom:64px; top:auto; z-index:77;
     width:min(330px,calc(100vw - 36px));
-    display:flex; flex-direction:column-reverse; gap:10px; align-items:stretch;
-    /* the desktop block sets height:100% and its own scrolling; neither
-       applies to a corner stack, and overflow would clip the results list */
-    height:auto; overflow:visible; padding-bottom:0;
+    height:auto;                      /* the desktop block sets 100% */
+    padding:11px; display:none;
+    background:var(--bg); border:1px solid var(--rule);
+    border-radius:11px; box-shadow:var(--shadow);
+    /* the CARD scrolls, not the panel: overflow here would clip the search
+       hits, which drop out of the box at the top of the panel */
+    overflow:visible;
   }
-  /* column-reverse puts the first child last, so the search box sits
-     directly above the button and the deadlines card grows upward from it
-     -- opening the panel never shifts the search box. */
-  .right #deadlines{display:none}
-  body.sidebar-open .right #deadlines{
-    display:block; max-height:min(66vh,560px); overflow-y:auto;
-  }
-  /* down here there is no room below the input, so the hits open upward */
-  .searchwrap .results{top:auto; bottom:calc(100% + 5px)}
+  body.sidebar-open .right{display:flex}
+  .right #deadlines{max-height:min(58vh,470px); overflow-y:auto}
 }

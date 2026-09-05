@@ -749,9 +749,12 @@ a.mail.who{white-space:nowrap}
    looked like a stray <br>. Keep it inline (2026-09-04, Nico). */
 .qlinks a.mail{display:inline; gap:0}
 
-/* ---- the View by button says what a click will switch to (2026-09-04) ---- */
+/* ---- hover boxes on the two top-bar buttons ----
+   View by says what a click will switch to (2026-09-04); the help button
+   says what it is for, since "?" and an envelope alone do not (2026-09-05).
+   .helpbtn is already position:relative for its two corner marks. */
 .viewbtn{position:relative}
-.viewbtn .tip{
+.viewbtn .tip,.helpbtn .tip{
   position:absolute; top:calc(100% + 9px); right:0; z-index:78;
   background:var(--surface); color:var(--ink);
   border:1px solid var(--rule); border-radius:7px;
@@ -760,7 +763,10 @@ a.mail.who{white-space:nowrap}
   box-shadow:var(--shadow); opacity:0; visibility:hidden;
   transition:opacity .12s ease; pointer-events:none;
 }
-.viewbtn:hover .tip,.viewbtn:focus-visible .tip{opacity:1; visibility:visible}
+.viewbtn:hover .tip,.viewbtn:focus-visible .tip,
+.helpbtn:hover .tip,.helpbtn:focus-visible .tip{opacity:1; visibility:visible}
+/* once the popover is open it says the same thing, at length */
+.helpbtn[aria-expanded="true"] .tip{opacity:0; visibility:hidden}
 
 /* ================= the sidebar minimizes when it will not fit =================
    Between 861 and 1240px there is no room for a third column. Leaving the

@@ -356,6 +356,12 @@ ul.items a:hover{text-decoration-color:var(--gold)}
   font-variant-numeric:tabular-nums}
 .cat.video .mins{color:#7A6231}
 .tba{font-size:13px; color:var(--ink-3); font-style:italic; white-space:nowrap}
+/* The slide-deck link on a video bullet. Sized like the running time next
+   to it, so it reads as a quiet annotation rather than competing with the
+   video's own title (2026-09-06, Nico). */
+.deck{font-size:13px; color:var(--ink-2); white-space:nowrap}
+.deck a{color:inherit}
+.cat.video .deck{color:#7A6231}
 
 /* ===================== general-logistics page ===================== */
 .gl-grid{display:grid; grid-template-columns:1fr 1fr; gap:11px;

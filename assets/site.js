@@ -2,9 +2,9 @@
    "due within three days" flag.
 
    The palette is stamped on <html> by the generator and the site is light
-   by default. The ONE exception is phones, which go dark between an hour
-   after sunset and an hour before sunrise -- see AUTOMATIC NIGHT MODE
-   below (2026-09-08). There is no manual theme switch. */
+   by default. The ONE exception is phones, which go dark between 22:00 and
+   05:00 on the device's own clock -- see AUTOMATIC NIGHT MODE below
+   (2026-09-08). There is no manual theme switch. */
 
 (function () {
   "use strict";
@@ -375,106 +375,43 @@
   /* ==================================================================
      AUTOMATIC NIGHT MODE -- PHONES ONLY (2026-09-08, Nico)
 
-     Dark from one hour AFTER sunset to one hour BEFORE sunrise. Only the
-     phone gets it: every dark rule lives inside the <=860px breakpoint in
-     site.css, so a desktop browser is unaffected however this attribute is
-     set. Resizing a window across the breakpoint therefore just works.
+     Dark from 22:00 to 05:00 on the phone's OWN clock. No sunrise/sunset
+     maths and no location: an earlier version computed the sun times, which
+     meant either raising a geolocation prompt -- not something a course
+     website should do unasked -- or assuming everyone is in Los Angeles.
+     A fixed evening window is what Nico actually wanted, and it is right
+     wherever the student is, because their phone's clock is already local.
+
+     Only the phone gets it: every dark rule lives inside the <=860px
+     breakpoint in site.css, so a desktop browser is unaffected however this
+     attribute is set, and resizing across the breakpoint just works.
 
      This runs at the TOP LEVEL, not inside DOMContentLoaded. site.js is a
-     synchronous <script> in <head>, so stamping the attribute here happens
-     BEFORE first paint -- otherwise a phone opened at night would flash
-     white and then go dark.
-
-     LOCATION. The course is at UCLA and all but a handful of the phones
-     reading this are in Los Angeles, so that is the default. Getting the
-     device's true position needs navigator.geolocation, which raises a
-     permission prompt, and a course website has no business asking students
-     for their location unprompted. So: if the browser has ALREADY granted
-     this origin location, use the real position; otherwise use UCLA. We
-     never trigger the prompt ourselves.
+     synchronous <script> in <head>, so the attribute is stamped BEFORE
+     first paint -- otherwise a phone opened at night would flash white and
+     then go dark.
      ================================================================== */
 
-  var UCLA = { lat: 34.0722, lon: -118.4441 };
-  var HOUR = 3600000;
-  var place = UCLA;
+  var NIGHT_FROM = 22;          /* inclusive, local hour */
+  var NIGHT_TO = 5;             /* exclusive, local hour */
 
-  /* Sunrise / sunset by the standard low-precision solar equations (the
-     same ones SunCalc uses). Accurate to well under a minute, which is far
-     more than a colour scheme needs. Returns null where the sun does not
-     rise or set that day -- above the arctic circles -- and the page then
-     simply stays light. */
-  function sunTimes(date, lat, lon) {
-    var rad = Math.PI / 180, J2000 = 2451545, J0 = 0.0009;
-    var e = rad * 23.4397;                       /* obliquity */
-    var lw = rad * -lon, phi = rad * lat;
-    var d = date.valueOf() / 86400000 - 0.5 + 2440588 - J2000;
-
-    var n = Math.round(d - J0 - lw / (2 * Math.PI));
-    var ds = J0 + lw / (2 * Math.PI) + n;
-    var M = rad * (357.5291 + 0.98560028 * ds);
-    var L = M + rad * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M)
-                       + 0.0003 * Math.sin(3 * M)) + rad * 102.9372 + Math.PI;
-    var dec = Math.asin(Math.sin(e) * Math.sin(L));
-    var Jnoon = J2000 + ds + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2 * L);
-
-    var cosH = (Math.sin(rad * -0.833) - Math.sin(phi) * Math.sin(dec))
-             / (Math.cos(phi) * Math.cos(dec));
-    if (!(cosH >= -1 && cosH <= 1)) { return null; }
-    var H = Math.acos(cosH);
-    var Jset = J2000 + (J0 + (H + lw) / (2 * Math.PI) + n)
-             + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2 * L);
-
-    function toDate(j) { return new Date((j + 0.5 - 2440588) * 86400000); }
-    return { rise: toDate(Jnoon - (Jset - Jnoon)), set: toDate(Jset) };
-  }
-
-  /* True when `now` is at least an hour past sunset, or still more than an
-     hour short of sunrise. Both boundaries are computed for the DAY THE SUN
-     SET, so the small hours after midnight resolve against the previous
-     evening rather than the coming one. */
-  function isNight(now, lat, lon) {
-    var today = sunTimes(now, lat, lon);
-    if (!today) { return false; }
-    if (now.valueOf() >= today.set.valueOf() + HOUR) { return true; }
-    if (now.valueOf() <= today.rise.valueOf() - HOUR) {
-      /* before dawn: dark unless last night's sunset has not happened yet,
-         which cannot occur, so this is simply "still night" */
-      return true;
-    }
-    return false;
+  function isNight(now) {
+    var h = now.getHours();
+    return h >= NIGHT_FROM || h < NIGHT_TO;
   }
 
   function paintNight() {
-    var on = isNight(new Date(), place.lat, place.lon);
     var root = document.documentElement;
-    if (on) { root.setAttribute("data-night", "1"); }
+    if (isNight(new Date())) { root.setAttribute("data-night", "1"); }
     else { root.removeAttribute("data-night"); }
   }
 
-  function initNight() {
-    paintNight();
-    /* re-check while the page is open, so it flips without a reload */
-    setInterval(paintNight, 5 * 60 * 1000);
-
-    /* Use the real position ONLY if this origin already has permission --
-       never prompt. */
-    if (!navigator.geolocation || !navigator.permissions
-        || !navigator.permissions.query) { return; }
-    try {
-      navigator.permissions.query({ name: "geolocation" }).then(function (st) {
-        if (st.state !== "granted") { return; }
-        navigator.geolocation.getCurrentPosition(function (pos) {
-          place = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-          paintNight();
-        }, function () {}, { maximumAge: 6 * HOUR, timeout: 5000 });
-      })["catch"](function () {});
-    } catch (e) { /* older browsers: keep the default location */ }
-  }
-
-  initNight();
+  paintNight();
+  /* re-check while the page is open, so it flips without a reload */
+  setInterval(paintNight, 5 * 60 * 1000);
 
   /* exposed for the build's own checks, not used by the page */
-  window.__m405night = { sunTimes: sunTimes, isNight: isNight };
+  window.__m405night = { isNight: isNight };
 
   /* ------------------------------ wire up ------------------------------ */
   document.addEventListener("DOMContentLoaded", function () {

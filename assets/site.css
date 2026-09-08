@@ -819,3 +819,64 @@ a.mail.who{white-space:nowrap}
   body.sidebar-open .right{display:flex}
   .right #deadlines{max-height:min(58vh,470px); overflow-y:auto}
 }
+
+/* ============== automatic night mode -- PHONES ONLY (2026-09-08) ==============
+   Nico: the phone should go dark between an hour after sunset and an hour
+   before sunrise, at the device's location. site.js works the sun times out
+   and stamps data-night="1" on <html>.
+
+   EVERY dark rule lives inside this <=860px block, so the desktop is never
+   affected however the attribute is set -- and dragging a window across the
+   breakpoint switches back on its own. The deck's navy and gold stay put:
+   only the surfaces, inks and card tints move, so the calendar's colour
+   coding (video = warm, podcast = cool grey, exam = gold) still reads. */
+@media (max-width:860px){
+  html[data-night="1"]{
+    color-scheme:dark;                 /* dark form controls and scrollbars */
+
+    --bg:#0A1520;
+    --surface:#11202E;
+    --surface-2:#16283A;
+    --rule:#263A4E;
+    --rule-soft:#1C2E40;
+    --ink:#E9EFF6;
+    --ink-2:#B6C4D2;
+    --ink-3:#8A99A9;
+    --light:#3A4B5C;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.5);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 18px rgba(0,0,0,.45);
+
+    /* category cards keep their CODING, at dark value */
+    --card-video:#2B2412;
+    --card-podcast:#1B2632;
+    --card-read:#11202E;
+    --card-practice:#11202E;
+    --card-hd:#163A5E;
+    --card-ink:#E9EFF6;
+
+    --class-body:#14293E;
+    --exam-body:#2B2412;
+    --cream-bg:#241F14; --cream-ink:#F2E7D0; --cream-edge:#4C3F27;
+
+    --chip-quiet-bg:#1E2C3A; --chip-quiet-ink:#A9B7C5;
+    --chip-video-bg:#4A3A15; --chip-video-ink:#F0DDAE;
+    --chip-class-bg:#1B4C82; --chip-class-ink:#FFFFFF;
+    --chip-exam-bg:#7A5714; --chip-exam-ink:#FFEFC9;
+    --accent-ink:#D9B36A;
+    --nav-active:#1B4C82; --nav-active-ink:#FFFFFF;
+    --topics-edge:#2A5A8A;
+    --sw-edge:rgba(233,239,246,.25);
+    --due-edge:#E06A6A; --due-bg:rgba(224,106,106,.14);
+    --gl-badge-bg:#3D4753; --gl-badge-ink:#E9EFF6;
+    --focus:#6FB3FF;
+  }
+
+  /* the handful of colours that are not tokens */
+  html[data-night="1"] .cat.video .mins,
+  html[data-night="1"] .cat.video .deck{color:#C7A867}
+  html[data-night="1"] .cat.video ul.items a{text-decoration-color:#8A7440}
+  html[data-night="1"] .jumpsel option,
+  html[data-night="1"] .jumpsel optgroup{background:#11202E; color:#E9EFF6}
+  html[data-night="1"] nav.list a[aria-current="page"] .d,
+  html[data-night="1"] .band .sub{color:#BCD0E4}
+}

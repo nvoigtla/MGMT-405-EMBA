@@ -413,6 +413,209 @@
   /* exposed for the build's own checks, not used by the page */
   window.__m405night = { isNight: isNight };
 
+  /* ==================================================================
+     EXPORT THE DEADLINES  (desktop only -- the CSS hides the button and
+     the panel below 861px)                        (2026-09-09, Nico)
+
+     Students tick which kinds they want -- Assignments, Videos, Exams --
+     and take them away as a .ics calendar file or a .csv spreadsheet.
+
+     RE-EXPORTING UPDATES, IT DOES NOT DUPLICATE. Each event's UID is built
+     from section + kind + week + ordinal, never from its title or its
+     date, so when Nico moves a deadline the same UID comes back and the
+     calendar revises the event the student already has. SEQUENCE carries
+     the build number, which only ever increases, so the revision is
+     accepted. The generator writes the subscription feeds with exactly the
+     same UIDs, so downloading and subscribing cannot collide either.
+
+     What an .ics cannot do is DELETE. A deadline dropped from the course
+     lingers in a downloaded calendar; the subscribe option has no such
+     problem, which is why it is offered.
+     ================================================================== */
+
+  function expRows(kinds) {
+    var out = [];
+    var lis = document.querySelectorAll("#deadlines ul.dl li[data-kind]");
+    Array.prototype.forEach.call(lis, function (li) {
+      var kind = li.getAttribute("data-kind");
+      var date = li.getAttribute("data-date");
+      if (kinds.indexOf(kind) === -1 || !date) { return; }  /* skip t.b.a. */
+      out.push({
+        kind: kind,
+        week: li.getAttribute("data-week"),
+        date: date,
+        end: li.getAttribute("data-end") || date,
+        title: li.getAttribute("data-title") || "",
+        when: (li.querySelector("time") || {}).textContent || ""
+      });
+    });
+    return out;
+  }
+
+  function dayAfter(iso) {
+    var p = iso.split("-");
+    var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + 1));
+    return d.toISOString().slice(0, 10).replace(/-/g, "");
+  }
+
+  function icsEsc(t) {
+    return String(t).replace(/\\/g, "\\\\").replace(/;/g, "\\;")
+      .replace(/,/g, "\\,").replace(/\n/g, "\\n");
+  }
+
+  /* RFC 5545 caps a content line at 75 octets, continuations start with a
+     space. Some video titles are long enough to need it. */
+  function icsFold(line) {
+    var out = [], s = line;
+    while (s.length > 72) { out.push(s.slice(0, 72)); s = s.slice(72); }
+    out.push(s);
+    return out.join("\r\n ");
+  }
+
+  function buildIcs(rows, course, section, seq, stamp) {
+    var seen = {};
+    var L = ["BEGIN:VCALENDAR", "VERSION:2.0", "CALSCALE:GREGORIAN",
+             "METHOD:PUBLISH",
+             "PRODID:-//UCLA Anderson//" + course + "//EN",
+             "X-WR-CALNAME:" + icsEsc(course + " - deadlines")];
+    rows.forEach(function (r) {
+      var key = r.kind + "-w" + r.week;
+      seen[key] = (seen[key] || 0) + 1;
+      L.push("BEGIN:VEVENT");
+      L.push("UID:mgmt405-" + section + "-" + r.kind + "-w" + r.week + "-"
+             + seen[key] + "@nvoigtla.github.io");
+      L.push("DTSTAMP:" + stamp);
+      L.push("LAST-MODIFIED:" + stamp);
+      L.push("SEQUENCE:" + seq);
+      L.push("DTSTART;VALUE=DATE:" + r.date.replace(/-/g, ""));
+      L.push("DTEND;VALUE=DATE:" + dayAfter(r.end));
+      L.push("TRANSP:TRANSPARENT");
+      L.push(icsFold("SUMMARY:" + icsEsc(course + ": " + r.title)));
+      L.push(icsFold("DESCRIPTION:" + icsEsc("Week " + r.week + " - " + r.when)));
+      L.push("END:VEVENT");
+    });
+    L.push("END:VCALENDAR");
+    return L.join("\r\n") + "\r\n";
+  }
+
+  function buildCsv(rows, course) {
+    function q(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }
+    function us(iso) {
+      var p = iso.split("-");
+      return p[1] + "/" + p[2] + "/" + p[0];      /* Google/Outlook order */
+    }
+    /* the header Google Calendar and Outlook both import */
+    var L = ["Subject,Start Date,End Date,All Day Event,Description"];
+    rows.forEach(function (r) {
+      L.push([q(course + ": " + r.title), q(us(r.date)), q(us(r.end)),
+              q("True"), q("Week " + r.week + " - " + r.when)].join(","));
+    });
+    return L.join("\r\n") + "\r\n";
+  }
+
+  function download(name, text, mime) {
+    var blob = new Blob([text], { type: mime + ";charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function initExport() {
+    var btn = document.getElementById("dl-exp");
+    var pop = document.getElementById("dl-exp-pop");
+    var card = document.getElementById("deadlines");
+    if (!btn || !pop || !card) { return; }
+
+    var course = card.getAttribute("data-course") || "MGMT 405";
+    var seq = card.getAttribute("data-seq") || "0";
+    var feeds = card.getAttribute("data-feeds") || "";
+    var section = /FEMBA/i.test(course) ? "femba" : "emba";
+    var hint = document.getElementById("exp-hint");
+
+    function kinds() {
+      var k = [];
+      if (document.getElementById("exp-assign").checked) { k.push("assign"); }
+      if (document.getElementById("exp-video").checked) { k.push("video"); }
+      if (document.getElementById("exp-exam").checked) { k.push("exam"); }
+      return k;
+    }
+
+    function stampNow() {
+      return new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
+    }
+
+    function slug() {
+      var k = kinds();
+      return k.length === 3 ? "all" : k.join("-");
+    }
+
+    function paintHint() {
+      var k = kinds();
+      var n = expRows(k).length;
+      if (!n) {
+        hint.innerHTML = "Nothing selected.";
+        return;
+      }
+      /* one feed per ticked category; three ticked is the combined feed */
+      var files = k.length === 3 ? ["mgmt405-all.ics"]
+                : k.map(function (x) { return "mgmt405-" + x + ".ics"; });
+      hint.innerHTML =
+        n + " date" + (n === 1 ? "" : "s") + " selected. Re-importing later "
+        + "updates these same events rather than adding duplicates."
+        + "<br><br><strong>Prefer it to update itself?</strong> Subscribe to "
+        + (files.length === 1 ? "this address" : "these addresses")
+        + " in your calendar app instead:"
+        + files.map(function (f) {
+            return "<code>" + feeds + "/" + f + "</code>";
+          }).join("");
+    }
+
+    function open(on) {
+      pop.hidden = !on;
+      btn.setAttribute("aria-expanded", String(on));
+      if (on) { paintHint(); }
+    }
+
+    btn.addEventListener("click", function () { open(pop.hidden); });
+    ["exp-assign", "exp-video", "exp-exam"].forEach(function (id) {
+      document.getElementById(id).addEventListener("change", paintHint);
+    });
+
+    document.getElementById("exp-ics").addEventListener("click", function () {
+      var rows = expRows(kinds());
+      if (!rows.length) { return; }
+      download("mgmt405-" + section + "-" + slug() + ".ics",
+               buildIcs(rows, course, section, seq, stampNow()),
+               "text/calendar");
+    });
+    document.getElementById("exp-csv").addEventListener("click", function () {
+      var rows = expRows(kinds());
+      if (!rows.length) { return; }
+      download("mgmt405-" + section + "-" + slug() + ".csv",
+               buildCsv(rows, course), "text/csv");
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !pop.hidden) { open(false); }
+    });
+    document.addEventListener("click", function (e) {
+      if (pop.hidden || pop.contains(e.target) || e.target === btn
+          || btn.contains(e.target)) { return; }
+      open(false);
+    });
+
+    /* exposed for the build's own checks */
+    window.__m405export = {
+      rows: expRows, ics: buildIcs, csv: buildCsv,
+      ctx: { course: course, section: section, seq: seq, feeds: feeds }
+    };
+  }
+
   /* ------------------------------ wire up ------------------------------ */
   document.addEventListener("DOMContentLoaded", function () {
     initMail();
@@ -422,6 +625,7 @@
     initHelp();
     initSearch();
     initSidebar();
+    initExport();
 
     var btn = document.getElementById("viewmode");
     if (btn) {

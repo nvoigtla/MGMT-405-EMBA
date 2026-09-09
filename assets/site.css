@@ -880,3 +880,59 @@ a.mail.who{white-space:nowrap}
   html[data-night="1"] nav.list a[aria-current="page"] .d,
   html[data-night="1"] .band .sub{color:#BCD0E4}
 }
+
+/* ============ Export, in the Deadlines & Exams header (2026-09-09) ============
+   Desktop only, per Nico: the phone hides the button and the panel below. */
+.box-hd.small .dl-exp{
+  margin-left:auto; font:inherit;
+  font-family:"Source Sans 3",Carlito,system-ui,sans-serif;
+  font-size:10.5px; font-weight:700; letter-spacing:.06em;
+  text-transform:uppercase; cursor:pointer; color:#fff;
+  background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.34);
+  border-radius:5px; padding:2px 7px;
+}
+.box-hd.small .dl-exp:hover{background:rgba(255,255,255,.3);
+  border-color:var(--gold)}
+.box-hd.small .dl-exp[aria-expanded="true"]{background:rgba(255,255,255,.32);
+  border-color:var(--gold)}
+
+.dl-exp-pop{
+  border-bottom:1px solid var(--rule); background:var(--surface-2);
+  padding:10px 12px 11px; font-size:13.5px;
+}
+.dl-exp-pop .lab{
+  margin:0 0 5px; font-family:"Source Sans 3",sans-serif; font-weight:700;
+  font-size:10.5px; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-3);
+}
+.dl-exp-pop .lab + .lab,.dl-exp-pop label + .lab{margin-top:9px}
+.dl-exp-pop label{
+  display:grid; grid-template-columns:auto minmax(0,1fr); gap:7px;
+  align-items:baseline; padding:2px 0; cursor:pointer;
+}
+.dl-exp-pop label .sub{
+  grid-column:2; font-size:11.5px; color:var(--ink-3); line-height:1.3;
+}
+.dl-exp-pop input[type="checkbox"]{accent-color:var(--navy); margin:0}
+.dl-exp-pop .row{display:flex; flex-direction:column; gap:5px}
+.dl-exp-pop .row button{
+  font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+  text-align:left; color:var(--ink); background:var(--surface);
+  border:1px solid var(--rule); border-radius:7px; padding:6px 9px;
+}
+.dl-exp-pop .row button:hover{border-color:var(--gold);
+  background:var(--surface-2)}
+.dl-exp-pop .hint{
+  margin:8px 0 0; font-size:11.5px; line-height:1.4; color:var(--ink-2);
+}
+.dl-exp-pop .hint a{color:var(--ink); word-break:break-all}
+.dl-exp-pop .hint code{
+  display:block; margin-top:3px; padding:4px 6px; font-size:11px;
+  background:var(--surface); border:1px solid var(--rule);
+  border-radius:5px; word-break:break-all;
+}
+
+/* the phone gets neither (2026-09-09, Nico) */
+@media (max-width:860px){
+  .box-hd.small .dl-exp,.dl-exp-pop{display:none !important}
+}

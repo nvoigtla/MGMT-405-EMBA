@@ -887,16 +887,18 @@ a.mail.who{white-space:nowrap}
 /* an inline SVG, not a glyph: an emoji-plane character would ignore the
    button's colour and render as a coloured box (2026-09-09) */
 .box-hd.small .dl-exp{
-  position:relative; margin-left:auto; display:inline-flex;
+  position:relative; display:inline-flex;
   align-items:center; justify-content:center; cursor:pointer; color:#fff;
   /* no chrome: the icon IS the button, sized to fill the header's 24px
      content box exactly, so it just fits without making the bar taller
      (2026-09-09, Nico) */
   background:none; border:0; padding:0; border-radius:5px; line-height:0;
-  /* the icon overruns the bar's 8px padding and pulls the layout box
-     back in, so it nearly touches the bar's edges without making the
-     header any taller */
-  margin:-3px 0;
+  /* The icon overruns the bar's 8px padding and pulls its layout box back
+     in, so it nearly touches the bar's edges without making the header any
+     taller. margin-LEFT stays auto: the shorthand `margin:-3px 0` reset it
+     and dropped the icon back beside the text instead of at the right-hand
+     end of the bar (2026-09-09). */
+  margin:-3px 0 -3px auto;
 }
 .box-hd.small .dl-exp:hover .ic,
 .box-hd.small .dl-exp[aria-expanded="true"] .ic{filter:brightness(1.12)}
@@ -945,7 +947,14 @@ a.mail.who{white-space:nowrap}
 }
 
 /* ---- the subscribe panel (2026-09-09) ---- */
-.dl-exp .tip{top:calc(100% + 7px); line-height:1.35}
+/* This tip lives inside #deadlines, which is a .card with overflow:hidden.
+   Right-aligned to a button 14px from the card edge, the nowrap version was
+   222px wide in a 234px card -- 4px hung outside and got clipped. So it
+   wraps and is capped to a width that always fits (2026-09-09, Nico). */
+.dl-exp .tip{
+  top:calc(100% + 7px); line-height:1.35;
+  white-space:normal; width:190px; text-align:left;
+}
 .dl-exp[aria-expanded="true"] .tip{opacity:0; visibility:hidden}
 .dl-exp-pop .note{
   margin:0 0 4px; font-size:11.5px; line-height:1.42; color:var(--ink-2);

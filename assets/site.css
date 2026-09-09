@@ -760,7 +760,7 @@ a.mail.who{white-space:nowrap}
    says what it is for, since "?" and an envelope alone do not (2026-09-05).
    .helpbtn is already position:relative for its two corner marks. */
 .viewbtn{position:relative}
-.viewbtn .tip,.helpbtn .tip{
+.viewbtn .tip,.helpbtn .tip,.dl-exp .tip{
   position:absolute; top:calc(100% + 9px); right:0; z-index:78;
   background:var(--surface); color:var(--ink);
   border:1px solid var(--rule); border-radius:7px;
@@ -770,7 +770,8 @@ a.mail.who{white-space:nowrap}
   transition:opacity .12s ease; pointer-events:none;
 }
 .viewbtn:hover .tip,.viewbtn:focus-visible .tip,
-.helpbtn:hover .tip,.helpbtn:focus-visible .tip{opacity:1; visibility:visible}
+.helpbtn:hover .tip,.helpbtn:focus-visible .tip,
+.dl-exp:hover .tip,.dl-exp:focus-visible .tip{opacity:1; visibility:visible}
 /* once the popover is open it says the same thing, at length */
 .helpbtn[aria-expanded="true"] .tip{opacity:0; visibility:hidden}
 
@@ -883,14 +884,15 @@ a.mail.who{white-space:nowrap}
 
 /* ============ Export, in the Deadlines & Exams header (2026-09-09) ============
    Desktop only, per Nico: the phone hides the button and the panel below. */
+/* an inline SVG, not a glyph: an emoji-plane character would ignore the
+   button's colour and render as a coloured box (2026-09-09) */
 .box-hd.small .dl-exp{
-  margin-left:auto; font:inherit;
-  font-family:"Source Sans 3",Carlito,system-ui,sans-serif;
-  font-size:10.5px; font-weight:700; letter-spacing:.06em;
-  text-transform:uppercase; cursor:pointer; color:#fff;
-  background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.34);
-  border-radius:5px; padding:2px 7px;
+  position:relative; margin-left:auto; display:inline-flex;
+  align-items:center; justify-content:center; cursor:pointer; color:#fff;
+  background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.28);
+  border-radius:6px; padding:2px 4px; line-height:0;
 }
+.box-hd.small .dl-exp .ic{display:block}
 .box-hd.small .dl-exp:hover{background:rgba(255,255,255,.3);
   border-color:var(--gold)}
 .box-hd.small .dl-exp[aria-expanded="true"]{background:rgba(255,255,255,.32);
@@ -936,3 +938,18 @@ a.mail.who{white-space:nowrap}
 @media (max-width:860px){
   .box-hd.small .dl-exp,.dl-exp-pop{display:none !important}
 }
+
+/* ---- the subscribe panel (2026-09-09) ---- */
+.dl-exp .tip{top:calc(100% + 7px); line-height:1.35}
+.dl-exp[aria-expanded="true"] .tip{opacity:0; visibility:hidden}
+.dl-exp-pop .note{
+  margin:0 0 4px; font-size:11.5px; line-height:1.42; color:var(--ink-2);
+}
+.dl-exp-pop .how{
+  margin:8px 0 0; font-size:11px; line-height:1.45; color:var(--ink-3);
+}
+.dl-exp-pop .how em{font-style:normal; color:var(--ink-2); font-weight:600}
+.dl-exp-pop .hint .n{
+  display:block; margin-top:4px; font-size:11px; color:var(--ink-3);
+}
+.dl-exp-pop .row button[disabled]{opacity:.5; cursor:default}

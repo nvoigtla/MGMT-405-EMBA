@@ -414,116 +414,27 @@
   window.__m405night = { isNight: isNight };
 
   /* ==================================================================
-     EXPORT THE DEADLINES  (desktop only -- the CSS hides the button and
-     the panel below 861px)                        (2026-09-09, Nico)
+     SUBSCRIBE TO THE DEADLINES  (desktop only -- the CSS hides the button
+     and the panel below 861px)                    (2026-09-09, Nico)
 
      Students tick which kinds they want -- Assignments, Videos, Exams --
-     and take them away as a .ics calendar file or a .csv spreadsheet.
+     and get the address of the matching feed to subscribe to.
 
-     RE-EXPORTING UPDATES, IT DOES NOT DUPLICATE. Each event's UID is built
-     from section + kind + week + ordinal, never from its title or its
-     date, so when Nico moves a deadline the same UID comes back and the
-     calendar revises the event the student already has. SEQUENCE carries
-     the build number, which only ever increases, so the revision is
-     accepted. The generator writes the subscription feeds with exactly the
-     same UIDs, so downloading and subscribing cannot collide either.
+     SUBSCRIBING, NOT DOWNLOADING. A downloaded .ics can add an event and
+     update one, but it can never DELETE: a deadline dropped from the
+     course would sit in the student's calendar for ever. A subscribed feed
+     is a MIRROR -- the calendar re-fetches the file, so a removed date
+     disappears, a new one appears and a moved one moves, with nothing for
+     the student to do. That is why the download option was taken out
+     rather than kept alongside.
 
-     What an .ics cannot do is DELETE. A deadline dropped from the course
-     lingers in a downloaded calendar; the subscribe option has no such
-     problem, which is why it is offered.
+     How often is up to their calendar app, not to us: Apple Calendar lets
+     them choose (5 minutes to weekly), Google refreshes an external feed
+     roughly every 8-24 hours.
+
+     The feeds themselves are static files written by _build_site.py at
+     feeds/mgmt405-{assign,video,exam,all}.ics.
      ================================================================== */
-
-  function expRows(kinds) {
-    var out = [];
-    var lis = document.querySelectorAll("#deadlines ul.dl li[data-kind]");
-    Array.prototype.forEach.call(lis, function (li) {
-      var kind = li.getAttribute("data-kind");
-      var date = li.getAttribute("data-date");
-      if (kinds.indexOf(kind) === -1 || !date) { return; }  /* skip t.b.a. */
-      out.push({
-        kind: kind,
-        week: li.getAttribute("data-week"),
-        date: date,
-        end: li.getAttribute("data-end") || date,
-        title: li.getAttribute("data-title") || "",
-        when: (li.querySelector("time") || {}).textContent || ""
-      });
-    });
-    return out;
-  }
-
-  function dayAfter(iso) {
-    var p = iso.split("-");
-    var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + 1));
-    return d.toISOString().slice(0, 10).replace(/-/g, "");
-  }
-
-  function icsEsc(t) {
-    return String(t).replace(/\\/g, "\\\\").replace(/;/g, "\\;")
-      .replace(/,/g, "\\,").replace(/\n/g, "\\n");
-  }
-
-  /* RFC 5545 caps a content line at 75 octets, continuations start with a
-     space. Some video titles are long enough to need it. */
-  function icsFold(line) {
-    var out = [], s = line;
-    while (s.length > 72) { out.push(s.slice(0, 72)); s = s.slice(72); }
-    out.push(s);
-    return out.join("\r\n ");
-  }
-
-  function buildIcs(rows, course, section, seq, stamp) {
-    var seen = {};
-    var L = ["BEGIN:VCALENDAR", "VERSION:2.0", "CALSCALE:GREGORIAN",
-             "METHOD:PUBLISH",
-             "PRODID:-//UCLA Anderson//" + course + "//EN",
-             "X-WR-CALNAME:" + icsEsc(course + " - deadlines")];
-    rows.forEach(function (r) {
-      var key = r.kind + "-w" + r.week;
-      seen[key] = (seen[key] || 0) + 1;
-      L.push("BEGIN:VEVENT");
-      L.push("UID:mgmt405-" + section + "-" + r.kind + "-w" + r.week + "-"
-             + seen[key] + "@nvoigtla.github.io");
-      L.push("DTSTAMP:" + stamp);
-      L.push("LAST-MODIFIED:" + stamp);
-      L.push("SEQUENCE:" + seq);
-      L.push("DTSTART;VALUE=DATE:" + r.date.replace(/-/g, ""));
-      L.push("DTEND;VALUE=DATE:" + dayAfter(r.end));
-      L.push("TRANSP:TRANSPARENT");
-      L.push(icsFold("SUMMARY:" + icsEsc(course + ": " + r.title)));
-      L.push(icsFold("DESCRIPTION:" + icsEsc("Week " + r.week + " - " + r.when)));
-      L.push("END:VEVENT");
-    });
-    L.push("END:VCALENDAR");
-    return L.join("\r\n") + "\r\n";
-  }
-
-  function buildCsv(rows, course) {
-    function q(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }
-    function us(iso) {
-      var p = iso.split("-");
-      return p[1] + "/" + p[2] + "/" + p[0];      /* Google/Outlook order */
-    }
-    /* the header Google Calendar and Outlook both import */
-    var L = ["Subject,Start Date,End Date,All Day Event,Description"];
-    rows.forEach(function (r) {
-      L.push([q(course + ": " + r.title), q(us(r.date)), q(us(r.end)),
-              q("True"), q("Week " + r.week + " - " + r.when)].join(","));
-    });
-    return L.join("\r\n") + "\r\n";
-  }
-
-  function download(name, text, mime) {
-    var blob = new Blob([text], { type: mime + ";charset=utf-8" });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url;
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-  }
 
   function initExport() {
     var btn = document.getElementById("dl-exp");
@@ -531,11 +442,9 @@
     var card = document.getElementById("deadlines");
     if (!btn || !pop || !card) { return; }
 
-    var course = card.getAttribute("data-course") || "MGMT 405";
-    var seq = card.getAttribute("data-seq") || "0";
     var feeds = card.getAttribute("data-feeds") || "";
-    var section = /FEMBA/i.test(course) ? "femba" : "emba";
     var hint = document.getElementById("exp-hint");
+    var copy = document.getElementById("exp-copy");
 
     function kinds() {
       var k = [];
@@ -545,59 +454,73 @@
       return k;
     }
 
-    function stampNow() {
-      return new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
+    /* one feed per ticked kind; all three is the combined feed */
+    function urls() {
+      var k = kinds();
+      if (!k.length) { return []; }
+      if (k.length === 3) { return [feeds + "/mgmt405-all.ics"]; }
+      return k.map(function (x) { return feeds + "/mgmt405-" + x + ".ics"; });
     }
 
-    function slug() {
-      var k = kinds();
-      return k.length === 3 ? "all" : k.join("-");
+    function countFor(kindList) {
+      var n = 0;
+      var lis = document.querySelectorAll("#deadlines ul.dl li[data-kind]");
+      Array.prototype.forEach.call(lis, function (li) {
+        if (kindList.indexOf(li.getAttribute("data-kind")) !== -1
+            && li.getAttribute("data-date")) { n += 1; }
+      });
+      return n;
     }
 
-    function paintHint() {
-      var k = kinds();
-      var n = expRows(k).length;
-      if (!n) {
-        hint.innerHTML = "Nothing selected.";
+    function paint() {
+      var u = urls();
+      if (!u.length) {
+        hint.innerHTML = "<em>Nothing selected.</em>";
+        copy.disabled = true;
         return;
       }
-      /* one feed per ticked category; three ticked is the combined feed */
-      var files = k.length === 3 ? ["mgmt405-all.ics"]
-                : k.map(function (x) { return "mgmt405-" + x + ".ics"; });
+      copy.disabled = false;
+      var n = countFor(kinds());
       hint.innerHTML =
-        n + " date" + (n === 1 ? "" : "s") + " selected. Re-importing later "
-        + "updates these same events rather than adding duplicates."
-        + "<br><br><strong>Prefer it to update itself?</strong> Subscribe to "
-        + (files.length === 1 ? "this address" : "these addresses")
-        + " in your calendar app instead:"
-        + files.map(function (f) {
-            return "<code>" + feeds + "/" + f + "</code>";
-          }).join("");
+        u.map(function (x) { return "<code>" + x + "</code>"; }).join("")
+        + '<span class="n">' + n + " date" + (n === 1 ? "" : "s")
+        + (u.length > 1 ? ", across " + u.length + " calendars" : "")
+        + "</span>";
     }
 
     function open(on) {
       pop.hidden = !on;
       btn.setAttribute("aria-expanded", String(on));
-      if (on) { paintHint(); }
+      if (on) { paint(); }
     }
 
     btn.addEventListener("click", function () { open(pop.hidden); });
     ["exp-assign", "exp-video", "exp-exam"].forEach(function (id) {
-      document.getElementById(id).addEventListener("change", paintHint);
+      document.getElementById(id).addEventListener("change", paint);
     });
 
-    document.getElementById("exp-ics").addEventListener("click", function () {
-      var rows = expRows(kinds());
-      if (!rows.length) { return; }
-      download("mgmt405-" + section + "-" + slug() + ".ics",
-               buildIcs(rows, course, section, seq, stampNow()),
-               "text/calendar");
-    });
-    document.getElementById("exp-csv").addEventListener("click", function () {
-      var rows = expRows(kinds());
-      if (!rows.length) { return; }
-      download("mgmt405-" + section + "-" + slug() + ".csv",
-               buildCsv(rows, course), "text/csv");
+    copy.addEventListener("click", function () {
+      var text = urls().join("\n");
+      if (!text) { return; }
+      function done() {
+        var was = copy.textContent;
+        copy.textContent = "Copied";
+        setTimeout(function () { copy.textContent = was; }, 1600);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () {});
+        return;
+      }
+      /* older browsers, and any page served without a secure context */
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) { /* ignore */ }
+      document.body.removeChild(ta);
     });
 
     document.addEventListener("keydown", function (e) {
@@ -610,10 +533,7 @@
     });
 
     /* exposed for the build's own checks */
-    window.__m405export = {
-      rows: expRows, ics: buildIcs, csv: buildCsv,
-      ctx: { course: course, section: section, seq: seq, feeds: feeds }
-    };
+    window.__m405export = { urls: urls, count: countFor, feeds: feeds };
   }
 
   /* ------------------------------ wire up ------------------------------ */

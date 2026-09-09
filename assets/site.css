@@ -889,14 +889,19 @@ a.mail.who{white-space:nowrap}
 .box-hd.small .dl-exp{
   position:relative; margin-left:auto; display:inline-flex;
   align-items:center; justify-content:center; cursor:pointer; color:#fff;
-  background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.28);
-  border-radius:6px; padding:2px 4px; line-height:0;
+  /* no chrome: the icon IS the button, sized to fill the header's 24px
+     content box exactly, so it just fits without making the bar taller
+     (2026-09-09, Nico) */
+  background:none; border:0; padding:0; border-radius:5px; line-height:0;
+  /* the icon overruns the bar's 8px padding and pulls the layout box
+     back in, so it nearly touches the bar's edges without making the
+     header any taller */
+  margin:-3px 0;
 }
+.box-hd.small .dl-exp:hover .ic,
+.box-hd.small .dl-exp[aria-expanded="true"] .ic{filter:brightness(1.12)}
+.box-hd.small .dl-exp:focus-visible{outline-offset:3px}
 .box-hd.small .dl-exp .ic{display:block}
-.box-hd.small .dl-exp:hover{background:rgba(255,255,255,.3);
-  border-color:var(--gold)}
-.box-hd.small .dl-exp[aria-expanded="true"]{background:rgba(255,255,255,.32);
-  border-color:var(--gold)}
 
 .dl-exp-pop{
   border-bottom:1px solid var(--rule); background:var(--surface-2);

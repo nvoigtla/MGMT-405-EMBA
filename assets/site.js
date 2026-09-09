@@ -454,12 +454,17 @@
       return k;
     }
 
-    /* one feed per ticked kind; all three is the combined feed */
-    function urls() {
+    /* ONE address per combination. The generator writes a feed for every
+       non-empty combination of the three kinds -- 7 files -- so ticking two
+       gives a single address rather than two. kinds() keeps FEED_KINDS
+       order, so the name built here always matches the file on disk
+       whatever order the boxes were ticked (2026-09-09, Nico). */
+    function feedUrl() {
       var k = kinds();
-      if (!k.length) { return []; }
-      if (k.length === 3) { return [feeds + "/mgmt405-all.ics"]; }
-      return k.map(function (x) { return feeds + "/mgmt405-" + x + ".ics"; });
+      if (!k.length) { return null; }
+      var name = k.length === 3 ? "mgmt405-all.ics"
+                                : "mgmt405-" + k.join("-") + ".ics";
+      return feeds + "/" + name;
     }
 
     function countFor(kindList) {
@@ -473,19 +478,17 @@
     }
 
     function paint() {
-      var u = urls();
-      if (!u.length) {
+      var u = feedUrl();
+      if (!u) {
         hint.innerHTML = "<em>Nothing selected.</em>";
         copy.disabled = true;
         return;
       }
       copy.disabled = false;
       var n = countFor(kinds());
-      hint.innerHTML =
-        u.map(function (x) { return "<code>" + x + "</code>"; }).join("")
+      hint.innerHTML = "<code>" + u + "</code>"
         + '<span class="n">' + n + " date" + (n === 1 ? "" : "s")
-        + (u.length > 1 ? ", across " + u.length + " calendars" : "")
-        + "</span>";
+        + " in one calendar</span>";
     }
 
     function open(on) {
@@ -500,7 +503,7 @@
     });
 
     copy.addEventListener("click", function () {
-      var text = urls().join("\n");
+      var text = feedUrl();
       if (!text) { return; }
       function done() {
         var was = copy.textContent;
@@ -533,7 +536,7 @@
     });
 
     /* exposed for the build's own checks */
-    window.__m405export = { urls: urls, count: countFor, feeds: feeds };
+    window.__m405export = { url: feedUrl, count: countFor, feeds: feeds };
   }
 
   /* ------------------------------ wire up ------------------------------ */

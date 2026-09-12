@@ -124,6 +124,8 @@ a:hover{text-decoration-color:var(--gold)}
 /* an image mark (the Bruin Bear) carries its own colour; display:block
    keeps it off the text baseline inside the flex header */
 .box-hd .cg img{display:block}
+/* a mark that needs to run larger than the 16px default (2026-09-12) */
+.box-hd .cg .lg{font-size:21px; line-height:1; display:block}
 .box-hd.small{font-size:12px; letter-spacing:.07em; text-transform:uppercase}
 
 /* ---------------------------- left column ---------------------------- */

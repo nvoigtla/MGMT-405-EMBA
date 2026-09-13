@@ -391,6 +391,9 @@ ul.items a:hover{text-decoration-color:var(--gold)}
 .panel-bd dt{font-family:"Source Sans 3",sans-serif; font-size:10.5px; font-weight:700;
   letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); padding-top:3px}
 .panel-bd dd{margin:0; color:var(--ink-2)}
+/* the on-campus dates run on from the meeting times after a gap, rather
+   than on a line of their own (2026-09-13, Nico) */
+.panel-bd dd .oc{margin-left:18px}
 .panel-bd dd b{color:var(--ink)}
 .qlinks{display:flex; flex-direction:column; gap:8px; font-size:15px; margin-top:10px}
 .qlinks.first{margin-top:0}

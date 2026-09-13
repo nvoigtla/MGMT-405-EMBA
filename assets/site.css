@@ -398,7 +398,11 @@ ul.items a:hover{text-decoration-color:var(--gold)}
 .qlinks a:hover .u{text-decoration:underline; text-decoration-color:var(--gold)}
 .qlinks .g{color:var(--gold); width:15px; flex:none; text-align:center; font-size:13px}
 /* two half-width boxes side by side, above the three columns */
-.gl-row{display:grid; grid-template-columns:1fr 1fr; gap:11px}
+/* Three boxes since 2026-09-13 (Course at a Glance joined the band).
+   The middle step matters: at laptop widths the whole page is already
+   down to two columns, and three boxes across would be squeezed. */
+.gl-row{display:grid; grid-template-columns:1fr 1fr 1fr; gap:11px}
+@media (max-width:1080px){.gl-row{grid-template-columns:1fr 1fr}}
 @media (max-width:700px){.gl-row{grid-template-columns:1fr}}
 
 /* ===================== module pages ===================== */

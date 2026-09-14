@@ -407,8 +407,10 @@ ul.items a:hover{text-decoration-color:var(--gold)}
 /* pulled up against its parent (2026-09-14, Nico): .qlinks is a flex
    column with an 8px gap, which applies between EVERY pair, so the
    sub-point cancels half of it rather than the list changing its gap
-   -- the spacing above the parent point stays exactly as it was */
-.qlinks a.sub{margin-left:24px; margin-top:-4px}
+   -- the spacing above the parent point stays exactly as it was.
+   -8px cancels the gap entirely, which is what makes this box 141.3px:
+   the same height as Help and Questions beside it (2026-09-14, Nico). */
+.qlinks a.sub{margin-left:24px; margin-top:-8px}
 .qlinks a.sub .g{font-size:9.5px}
 /* two half-width boxes side by side, above the three columns */
 /* Two columns: Course at a Glance on the left, the syllabus and

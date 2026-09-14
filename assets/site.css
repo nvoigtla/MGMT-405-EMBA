@@ -411,6 +411,16 @@ ul.items a:hover{text-decoration-color:var(--gold)}
    -8px cancels the gap entirely, which is what makes this box 141.3px:
    the same height as Help and Questions beside it (2026-09-14, Nico). */
 .qlinks a.sub{margin-left:24px; margin-top:-8px}
+/* The lead point is set at the panel-paragraph size, 15.5px, so it
+   reads as the thing the box is FOR (2026-09-14, Nico).
+   line-height is PINNED to 22.5px -- the line box a 15px row had at
+   the inherited 1.5 -- because the bigger type otherwise adds 0.75px
+   and the box has to stay level with Help and Questions beside it.
+   The pin alone leaves 1px: the row is a FLEX line aligned on the
+   baseline, so a 15.5px label and a 13px glyph span a slightly taller
+   union than either line box. The -1px margin takes that back, and the
+   box measures 141.25px either way -- same as Help. */
+.qlinks a.lead{font-size:15.5px; line-height:22.5px; margin-bottom:-1px}
 .qlinks a.sub .g{font-size:9.5px}
 /* two half-width boxes side by side, above the three columns */
 /* Two columns: Course at a Glance on the left, the syllabus and

@@ -451,6 +451,16 @@ ul.items a:hover{text-decoration-color:var(--gold)}
   text-decoration-color:var(--gold)}
 .mwk-hd .d{font-size:13px; color:var(--ink-3)}
 .mwk-topics{margin:0; font-size:15.5px; font-style:italic; color:var(--ink-2)}
+/* Key Topics + Goals, side by side above the Videos box and stacked on
+   a phone (2026-09-14, Nico). 860px is the shell's own phone
+   breakpoint, so the two collapse exactly when the page does. */
+.mbox-row{display:grid; grid-template-columns:1fr 1fr; gap:11px;
+  margin-bottom:11px; align-items:start}
+@media (max-width:860px){.mbox-row{grid-template-columns:1fr}}
+/* the second level of a module box's list */
+.mbox-row .panel-bd ul ul{margin:4px 0 0; padding-left:18px;
+  list-style:circle}
+.mbox-row .panel-bd ul ul li{margin-bottom:3px}
 
 
 /* ============================== print ============================== */

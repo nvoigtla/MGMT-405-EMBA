@@ -554,9 +554,11 @@
     if (btn) {
       btn.addEventListener("click", function () {
         /* The View by button also returns to the main page, so the new view
-           is applied somewhere it is actually visible (2026-09-03, Nico). */
+           is applied somewhere it is actually visible (2026-09-03, Nico).
+           Plain index.html since 2026-09-21: the root no longer redirects
+           to the current week, so there is nothing to opt out of. */
         store(mode === "weeks" ? "mods" : "weeks");
-        window.location.href = "index.html?stay=1";
+        window.location.href = "index.html";
       });
     }
     var bw = document.getElementById("t-weeks");

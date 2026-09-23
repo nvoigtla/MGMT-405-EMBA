@@ -255,6 +255,16 @@ main{min-width:0; display:flex; flex-direction:column; gap:0}
   letter-spacing:-.012em; color:#fff;
 }
 .band .sp{font-size:15.5px; font-weight:700; color:var(--palegold)}
+/* Home names the whole course in the band, which is a long string: give
+   its first track the room to keep it on one line, and set it a step
+   smaller than a week's "Week 3" (2026-09-23). */
+.band.home{grid-template-columns:1fr auto}
+.band.home h1{font-size:clamp(18px,1.75vw,22px); white-space:nowrap}
+@media (max-width:860px){
+  .band.home{grid-template-columns:1fr}
+  .band.home h1{white-space:normal}
+}
+
 .band .center{
   grid-column:2; text-align:center;
   font-family:"Source Sans 3",sans-serif; font-weight:700; font-size:12.5px;
@@ -428,6 +438,51 @@ ul.items a:hover{text-decoration-color:var(--gold)}
 .gl-row{display:grid; grid-template-columns:1fr 1fr; gap:11px}
 @media (max-width:700px){.gl-row{grid-template-columns:1fr}}
 
+/* The two Home cards are all but equal in width (2026-09-23,
+   Nico). 1.18fr is 54%/46% -- the least lopsided split at which
+   "PhD Student in Economics" and the TA's address still hold
+   one line each beside a 112px portrait. Measured, not guessed. */
+.gl-row.team-row{grid-template-columns:1.18fr 1fr}
+/* the body has to fill the stretched card, or height:100% on .team
+   resolves against nothing and the members stack at the top */
+.gl-row.team-row > .panel{display:flex; flex-direction:column}
+.gl-row.team-row > .panel > .panel-bd{flex:1}
+@media (max-width:700px){.gl-row.team-row{grid-template-columns:1fr}}
+
+/* ---------- The Teaching Team (Home) ---------- */
+/* A round portrait with the name, role, address and bio beside it -- the
+   arrangement of the BruinLearn team card (2026-09-23, Nico). */
+.team{display:flex; flex-direction:column; gap:22px;
+  height:100%; justify-content:space-around}
+.member{display:flex; align-items:center; gap:18px}
+.member .avatar{
+  width:112px; height:112px; flex:none; border-radius:50%;
+  object-fit:cover; background:var(--surface);
+  border:1px solid var(--rule); box-shadow:var(--shadow-sm);
+}
+.member .who{min-width:0; display:flex; flex-direction:column; gap:5px}
+.member .row{
+  display:flex; align-items:center; gap:10px; min-width:0;
+  font-size:16.5px; line-height:1.3; color:var(--ink-2);
+}
+/* the second line of the role, one step quieter */
+.member .row .r2{display:block; font-size:15px; color:var(--ink-3)}
+.member .row .g{
+  flex:none; width:17px; display:flex; justify-content:center;
+  color:var(--ink-3);
+}
+.member .row .v{min-width:0; overflow-wrap:break-word}
+.member .row a.mail{white-space:nowrap}
+.member .row .nm{font-weight:700; color:var(--ink)}
+/* the sub-points under "view by week or by Module" */
+.panel-bd ul ul{margin:5px 0 0; padding-left:17px; font-size:14.5px}
+.panel-bd ul ul li{margin-bottom:3px}
+@media (max-width:460px){
+  .member{gap:12px}
+  .member .avatar{width:66px; height:66px}
+  .member .row{font-size:14px}
+}
+
 /* ===================== module pages ===================== */
 .pills{display:flex; gap:7px; flex-wrap:wrap}
 .pill{
@@ -481,8 +536,12 @@ ul.items a:hover{text-decoration-color:var(--gold)}
 }
 
 
-/* a problem set's card: label and the upload line stack, the date stays right */
-.pcard.due .lead{flex:1 1 auto; min-width:0}
+/* a problem set's card: label and the upload line stack, the date stays right.
+   flex-basis 0, not auto: the card body WRAPS, and with an auto basis the
+   longer "Download ... and upload ..." line made .lead demand its own
+   max-content width, which pushed the date onto a line of its own
+   (2026-09-23). A zero basis lets the sentence wrap instead. */
+.pcard.due .lead{flex:1 1 0; min-width:0}
 .pcard.due .upload{
   margin:3px 0 0; font-size:14px; color:var(--ink-2); font-weight:400;
 }
@@ -695,6 +754,8 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
   .left,.right{position:static; top:auto}
   /* the columns own the scrollbars, so keep them unobtrusive */
   .left,main,.right{scrollbar-width:thin}
+  /* the search results are positioned by site.js here -- see place() */
+  .results{top:auto; right:auto}
 }
 
 /* "Show all deadlines" -- only visible while the list is filtered */

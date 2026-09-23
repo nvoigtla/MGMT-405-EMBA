@@ -182,7 +182,41 @@
         var dom = atob(a.getAttribute("data-d"));
         a.setAttribute("href", "mailto:" + user + "@" + dom);
         a.setAttribute("title", user + "@" + dom);
+        /* data-show means "print the address as the label as well"
+           (2026-09-23). Writing it here keeps the address out of the
+           served HTML entirely -- with it in the link text, the base64
+           href hid nothing from a harvester. The markup ships a
+           placeholder so the row is not empty without JavaScript. */
+        if (a.getAttribute("data-show") === "1") {
+          a.textContent = user + "@" + dom;
+          a.classList.remove("mail-ph");
+        }
       } catch (e) { /* leave it as inert text */ }
+    });
+  }
+
+  /* A link that acts on the deadlines card: it scrolls the card into view
+     and, where the target control is on screen, opens it. The subscribe
+     button is desktop-only -- below 861px the CSS hides it -- so on a phone
+     the scroll is the whole of it rather than a click that does nothing
+     (2026-09-23). */
+  function initOpeners() {
+    var links = document.querySelectorAll("a[data-opens]");
+    Array.prototype.forEach.call(links, function (a) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var card = document.getElementById("deadlines");
+        if (card && card.scrollIntoView) {
+          card.scrollIntoView({ block: "start" });
+        }
+        var t = document.getElementById(a.getAttribute("data-opens"));
+        /* Deferred by a tick on purpose: this same click goes on to reach
+           the document-level "close when the click was outside" handler,
+           which would shut the panel again the instant we opened it. */
+        if (t && t.offsetParent !== null) {
+          setTimeout(function () { t.click(); }, 0);
+        }
+      });
     });
   }
 
@@ -230,6 +264,35 @@
 
     var sel = -1;
 
+    /* Above 861px the right column is its own scroll container, and the
+       results panel is WIDER than that column -- so the column clipped its
+       left-hand edge and every result read as cut off (2026-09-23, Nico).
+       An absolutely positioned child cannot escape a scrolling ancestor, so
+       on desktop the panel is positioned FIXED against the viewport instead,
+       from the input's own rectangle. Below 861px the column does not
+       scroll and the stylesheet's absolute rule is left alone. */
+    function place() {
+      if (out.hidden) { return; }
+      if (window.innerWidth < 861) {
+        out.style.position = out.style.top = out.style.left =
+          out.style.width = "";
+        return;
+      }
+      var r = box.getBoundingClientRect();
+      var w = Math.max(292, r.width);
+      var left = Math.min(Math.max(8, r.right - w),
+                          document.documentElement.clientWidth - w - 8);
+      out.style.position = "fixed";
+      out.style.top = Math.round(r.bottom + 5) + "px";
+      out.style.left = Math.round(left) + "px";
+      out.style.width = Math.round(w) + "px";
+    }
+
+    window.addEventListener("resize", place);
+    /* the input rides the right column, so a scroll there moves it */
+    var col = box.closest(".right");
+    if (col) { col.addEventListener("scroll", place); }
+
     function close() { out.hidden = true; sel = -1; }
 
     /* A bare number has to match as a whole number: the token "6" must not
@@ -256,8 +319,20 @@
         p._rank = p.head.indexOf(phrase) !== -1 ? -1
                 : (tests.every(function (t) { return t(p.head); }) ? 0 : 1);
       });
+      /* Documents (syllabus pages, slides) rank BELOW every page of the
+         site and may take at most 6 of the 12 rows: there are 200 slides,
+         and a common word would otherwise bury the week page the student
+         was looking for (2026-09-23). */
+      hits.forEach(function (p) { if (p.d) { p._rank += 3; } });
       hits.sort(function (a, b) { return a._rank - b._rank; });
-      var shown = hits.slice(0, 12);
+      var shown = [], ndoc = 0;
+      for (var hi = 0; hi < hits.length && shown.length < 12; hi++) {
+        if (hits[hi].d) {
+          if (ndoc >= 6) { continue; }
+          ndoc++;
+        }
+        shown.push(hits[hi]);
+      }
 
       if (!shown.length) {
         out.innerHTML = '<div class="none">No page matches “' +
@@ -271,6 +346,7 @@
         sel = 0;
       }
       out.hidden = false;
+      place();
     }
 
     function move(step) {
@@ -549,6 +625,7 @@
     initSearch();
     initSidebar();
     initExport();
+    initOpeners();
 
     var btn = document.getElementById("viewmode");
     if (btn) {

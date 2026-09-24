@@ -136,7 +136,7 @@
 
      On a phone the deadlines column sits below the content, and the week
      header links down to it. Clicking that link narrows the list to that
-     week alone (2026-09-03, Nico); the "Show all deadlines" button puts
+     week alone (2026-09-03, Nico); the "Show all dates" button puts
      the rest back.
      ================================================================== */
 
@@ -522,24 +522,28 @@
     var hint = document.getElementById("exp-hint");
     var copy = document.getElementById("exp-copy");
 
+    var KINDS = ["assign", "video", "exam", "event"];
+
     function kinds() {
-      var k = [];
-      if (document.getElementById("exp-assign").checked) { k.push("assign"); }
-      if (document.getElementById("exp-video").checked) { k.push("video"); }
-      if (document.getElementById("exp-exam").checked) { k.push("exam"); }
-      return k;
+      return KINDS.filter(function (k) {
+        var box = document.getElementById("exp-" + k);
+        return box && box.checked;
+      });
     }
 
     /* ONE address per combination. The generator writes a feed for every
        non-empty combination of the three kinds -- 7 files -- so ticking two
-       gives a single address rather than two. kinds() keeps FEED_KINDS
-       order, so the name built here always matches the file on disk
-       whatever order the boxes were ticked (2026-09-09, Nico). */
+       gives a single address rather than two. kinds() filters the KINDS
+       list above, which is FEED_KINDS order, so the name built here always
+       matches the file on disk whatever order the boxes were ticked
+       (2026-09-09, Nico). A fourth kind -- the live Zoom sessions -- was
+       added 2026-09-24; nothing here is per-kind any more, so a fifth
+       would only need its id in KINDS and its box in the panel. */
     function feedUrl() {
       var k = kinds();
       if (!k.length) { return null; }
-      var name = k.length === 3 ? "mgmt405-all.ics"
-                                : "mgmt405-" + k.join("-") + ".ics";
+      var name = k.length === KINDS.length ? "mgmt405-all.ics"
+                                           : "mgmt405-" + k.join("-") + ".ics";
       return feeds + "/" + name;
     }
 
@@ -574,8 +578,9 @@
     }
 
     btn.addEventListener("click", function () { open(pop.hidden); });
-    ["exp-assign", "exp-video", "exp-exam"].forEach(function (id) {
-      document.getElementById(id).addEventListener("change", paint);
+    KINDS.forEach(function (k) {
+      var box = document.getElementById("exp-" + k);
+      if (box) { box.addEventListener("change", paint); }
     });
 
     copy.addEventListener("click", function () {

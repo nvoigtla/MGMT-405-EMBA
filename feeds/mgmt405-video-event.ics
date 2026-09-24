@@ -3,7 +3,7 @@ VERSION:2.0
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 PRODID:-//UCLA Anderson//MGMT 405 EMBA//EN
-X-WR-CALNAME:MGMT 405 (EMBA) - Videos
+X-WR-CALNAME:MGMT 405 (EMBA) - Videos + Live Sessions
 X-WR-TIMEZONE:America/Los_Angeles
 BEGIN:VEVENT
 UID:mgmt405-emba-video-w1-1@nvoigtla.github.io
@@ -43,6 +43,21 @@ SUMMARY:Econ: Watch Videos 1 – 7 for Module 3
 DESCRIPTION:Week 3 - by 10/11. https://nvoigtla.github.io/MGMT-405-EMBA/w
  eek-03.html
 URL:https://nvoigtla.github.io/MGMT-405-EMBA/week-03.html
+END:VEVENT
+BEGIN:VEVENT
+UID:mgmt405-emba-event-w3-1@nvoigtla.github.io
+DTSTAMP:20260924T234011Z
+LAST-MODIFIED:20260924T234011Z
+SEQUENCE:384460
+DTSTART:20261011T160000Z
+DTEND:20261011T170000Z
+TRANSP:OPAQUE
+SUMMARY:Econ: Coffee & Econ with Nico
+DESCRIPTION:Week 3 - Sun\, Oct 11 · 9:00 am PT. Join: https://ucla.zoom.
+ us/j/98762774970?pwd=3v56aqvWEAG88VCfyza2o1RUEaHiIp.1 https://nvoigtla.gi
+ thub.io/MGMT-405-EMBA/week-03.html
+URL:https://ucla.zoom.us/j/98762774970?pwd=3v56aqvWEAG88VCfyza2o1RUEaHiIp
+ .1
 END:VEVENT
 BEGIN:VEVENT
 UID:mgmt405-emba-video-w4-1@nvoigtla.github.io

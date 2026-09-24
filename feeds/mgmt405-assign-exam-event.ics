@@ -3,8 +3,23 @@ VERSION:2.0
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 PRODID:-//UCLA Anderson//MGMT 405 EMBA//EN
-X-WR-CALNAME:MGMT 405 (EMBA) - Assignments
+X-WR-CALNAME:MGMT 405 (EMBA) - Assignments + Exams + Live Sessions
 X-WR-TIMEZONE:America/Los_Angeles
+BEGIN:VEVENT
+UID:mgmt405-emba-event-w3-1@nvoigtla.github.io
+DTSTAMP:20260924T234011Z
+LAST-MODIFIED:20260924T234011Z
+SEQUENCE:384460
+DTSTART:20261011T160000Z
+DTEND:20261011T170000Z
+TRANSP:OPAQUE
+SUMMARY:Econ: Coffee & Econ with Nico
+DESCRIPTION:Week 3 - Sun\, Oct 11 · 9:00 am PT. Join: https://ucla.zoom.
+ us/j/98762774970?pwd=3v56aqvWEAG88VCfyza2o1RUEaHiIp.1 https://nvoigtla.gi
+ thub.io/MGMT-405-EMBA/week-03.html
+URL:https://ucla.zoom.us/j/98762774970?pwd=3v56aqvWEAG88VCfyza2o1RUEaHiIp
+ .1
+END:VEVENT
 BEGIN:VEVENT
 UID:mgmt405-emba-assign-w3-1@nvoigtla.github.io
 DTSTAMP:20260924T234011Z
@@ -30,6 +45,19 @@ SUMMARY:Econ: Problem Set 2
 DESCRIPTION:Week 5 - Tue\, Oct 27. https://nvoigtla.github.io/MGMT-405-EM
  BA/week-05.html
 URL:https://nvoigtla.github.io/MGMT-405-EMBA/week-05.html
+END:VEVENT
+BEGIN:VEVENT
+UID:mgmt405-emba-exam-w6-1@nvoigtla.github.io
+DTSTAMP:20260924T234011Z
+LAST-MODIFIED:20260924T234011Z
+SEQUENCE:384460
+DTSTART;VALUE=DATE:20261030
+DTEND;VALUE=DATE:20261101
+TRANSP:TRANSPARENT
+SUMMARY:Econ: Midterm Exam (online)
+DESCRIPTION:Week 6 - Fri\, Oct 30 – Sat\, Oct 31. https://nvoigtla.gith
+ ub.io/MGMT-405-EMBA/week-06.html
+URL:https://nvoigtla.github.io/MGMT-405-EMBA/week-06.html
 END:VEVENT
 BEGIN:VEVENT
 UID:mgmt405-emba-assign-w7-1@nvoigtla.github.io
@@ -69,5 +97,18 @@ SUMMARY:Econ: Problem Set 5
 DESCRIPTION:Week 10 - Thu\, Dec 3. https://nvoigtla.github.io/MGMT-405-EM
  BA/week-10.html
 URL:https://nvoigtla.github.io/MGMT-405-EMBA/week-10.html
+END:VEVENT
+BEGIN:VEVENT
+UID:mgmt405-emba-exam-w12-1@nvoigtla.github.io
+DTSTAMP:20260924T234011Z
+LAST-MODIFIED:20260924T234011Z
+SEQUENCE:384460
+DTSTART:20261212T170000Z
+DTEND:20261212T200000Z
+TRANSP:OPAQUE
+SUMMARY:Econ: Final Exam (online)
+DESCRIPTION:Week 12 - Sat\, Dec 12 · 9:00 AM – 12:00 PM. https://nvoig
+ tla.github.io/MGMT-405-EMBA/week-12.html
+URL:https://nvoigtla.github.io/MGMT-405-EMBA/week-12.html
 END:VEVENT
 END:VCALENDAR

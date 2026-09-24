@@ -237,6 +237,15 @@ nav.list .gl .t{font-weight:700}
   font-variant-numeric:tabular-nums}
 .dl li.here time{color:var(--accent-ink)}
 .dl li.watch .lb{font-style:italic}
+/* A live session in the Class Calendar column: the Zoom mark rides beside
+   the WEEK chip, which is the line that says what kind of date this is,
+   and the label is set bold like an exam's (2026-09-24). */
+.dl li.ev .lb{font-weight:700}
+.dl .w + img.zoom.sm{display:inline-block; vertical-align:-1px; margin-left:7px}
+/* the cream "this week" row and the dark-red "within 3 days" row both
+   recolour their text; the mark is a picture and cannot follow, so it is
+   dimmed very slightly instead of left looking pasted on */
+.dl li.here img.zoom.sm,.dl li.soon img.zoom.sm{opacity:.85}
 
 /* ============================== main ============================== */
 main{min-width:0; display:flex; flex-direction:column; gap:0}
@@ -332,11 +341,17 @@ main{min-width:0; display:flex; flex-direction:column; gap:0}
 .pcard.videos .pcard-bd{background:var(--card-video)}
 /* A live Zoom session takes the due card's one-line shape, in navy rather
    than gold -- it is a date to keep, not something to hand in (2026-09-24).
-   The linked half of the sub-line is what a student clicks, so it is bold
-   and underlined, like the BruinLearn links on a problem-set card. */
+   The linked words are what a student clicks, so they are bold and
+   underlined, like the BruinLearn links on a problem-set card.
+
+   The mark is the ZOOM WORDMARK rather than a glyph (2026-09-24, Nico), so
+   the .g slot holds an <img>: it needs display:block to keep off the text
+   baseline inside the flex row, and a nudge down to sit optically level
+   with the line -- the same problem the Bruin Bear has in a header bar. */
 .pcard.due.event{border-color:var(--navy)}
-.pcard.due.event .g{color:var(--navy)}
 .pcard.due.event .lead a{font-weight:700; text-decoration-color:var(--gold)}
+.pcard.due.event .g{align-self:center}
+img.zoom{display:block; height:auto}
 
 /* preparation container -- the calendar's thick-navy transparent box */
 .prep{

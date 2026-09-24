@@ -242,10 +242,14 @@ nav.list .gl .t{font-weight:700}
    and the label is set bold like an exam's (2026-09-24). */
 .dl li.ev .lb{font-weight:700}
 .dl .w + img.zoom.sm{display:inline-block; vertical-align:-1px; margin-left:7px}
-/* the cream "this week" row and the dark-red "within 3 days" row both
-   recolour their text; the mark is a picture and cannot follow, so it is
-   dimmed very slightly instead of left looking pasted on */
-.dl li.here img.zoom.sm,.dl li.soon img.zoom.sm{opacity:.85}
+/* The mark is NEVER dimmed. It was set to opacity .85 on the cream "this
+   week" row so it would not look pasted on -- and on that cream ground the
+   pale old logo went visibly grey, which is what Nico saw (2026-09-24). A
+   brand mark either prints in its own colour or it is not the mark. */
+/* The word a student clicks to JOIN sits inside the row's bold label, so
+   it needs the underline to read as a link at 13.5 px. */
+.dl li.ev .lb a{text-decoration:underline; text-decoration-color:var(--gold);
+  text-underline-offset:2px}
 
 /* ============================== main ============================== */
 main{min-width:0; display:flex; flex-direction:column; gap:0}

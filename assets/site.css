@@ -330,6 +330,13 @@ main{min-width:0; display:flex; flex-direction:column; gap:0}
 .pcard.holiday .pcard-hd{background:var(--chip-quiet-bg); color:var(--ink-2)}
 .pcard.holiday .pcard-bd{background:var(--surface-2); font-style:italic; color:var(--ink-2)}
 .pcard.videos .pcard-bd{background:var(--card-video)}
+/* A live Zoom session takes the due card's one-line shape, in navy rather
+   than gold -- it is a date to keep, not something to hand in (2026-09-24).
+   The linked half of the sub-line is what a student clicks, so it is bold
+   and underlined, like the BruinLearn links on a problem-set card. */
+.pcard.due.event{border-color:var(--navy)}
+.pcard.due.event .g{color:var(--navy)}
+.pcard.due.event .lead a{font-weight:700; text-decoration-color:var(--gold)}
 
 /* preparation container -- the calendar's thick-navy transparent box */
 .prep{

@@ -727,6 +727,12 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
 /* a module with no videos / no podcasts says so, rather than being absent */
 .none-yet{margin:6px 0 2px; font-size:15px; font-style:italic; color:var(--ink-2)}
 
+/* "(without solutions)" beside a published in-class deck. It reads like
+   the "(TBD)" placeholder but is deliberately a DIFFERENT class: _publish
+   counts .tba to report what is still missing, and a deck that is up is
+   not missing (2026-09-24). */
+.items .qual{font-size:13px; font-style:italic; color:var(--ink-3)}
+
 /* ---- phone only: a way down to this week's deadlines ----
    The deadlines column sits below the content on a phone, so the week
    header offers a link to it (2026-09-03, Nico). */

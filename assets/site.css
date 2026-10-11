@@ -381,6 +381,11 @@ img.zoom{display:block; height:auto}
 
 /* groups inside a card: the italic navy lead-in, then the bullets */
 .grp + .grp{margin-top:9px}
+/* class recordings sit under the topics they cover, indented so they
+   read as belonging to the class rather than as another topic
+   (2026-10-11, Nico asked for about 0.5cm) */
+.grp.recs{margin-top:6px}
+.grp.recs ul.items{margin-left:0.5cm}
 .grp-lab{
   font-style:italic; font-weight:700; font-size:15.5px; color:var(--card-ink);
   margin:0 0 3px;

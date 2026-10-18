@@ -418,6 +418,38 @@
     b.setAttribute("aria-expanded", String(open));
   }
 
+  /* The calendar list opens AT the current week rather than at week 1
+     (2026-10-18, Nico), and stays free to scroll up to earlier weeks --
+     this only sets an initial scrollTop, it does not hide anything.
+
+     The target is the row marked #dl-here, which is the first row of the
+     week whose page this is; on a page that has no such week (Home,
+     General Logistics) it is the first row still to come, measured
+     against today. Positions come from getBoundingClientRect rather than
+     offsetTop, which is relative to the nearest POSITIONED ancestor and
+     would be measured from the wrong box here. */
+  function initCalScroll() {
+    var list = document.querySelector("#deadlines ul.dl");
+    if (!list) { return; }
+    /* nothing to do where the list is not its own scroller (phones) */
+    if (list.scrollHeight <= list.clientHeight + 2) { return; }
+
+    var row = document.getElementById("dl-here");
+    if (!row || !list.contains(row)) {
+      var d = new Date(), p = function (n) { return (n < 10 ? "0" : "") + n; };
+      var today = d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+      var rows = list.querySelectorAll("li[data-date]");
+      row = null;
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].getAttribute("data-date") >= today) { row = rows[i]; break; }
+      }
+    }
+    if (!row) { return; }
+    /* 6px of air, so the row does not sit flush against the legend */
+    list.scrollTop += row.getBoundingClientRect().top
+                      - list.getBoundingClientRect().top - 6;
+  }
+
   function initSidebar() {
     var btn = document.getElementById("sidebtn");
     if (!btn) { return; }
@@ -630,6 +662,9 @@
     initSearch();
     initSidebar();
     initExport();
+    /* after the list has been filtered and laid out, so the measurement
+       is taken against what is actually on screen */
+    initCalScroll();
     initOpeners();
 
     var btn = document.getElementById("viewmode");

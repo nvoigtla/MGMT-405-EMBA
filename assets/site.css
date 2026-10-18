@@ -798,6 +798,18 @@ nav.list .n.gly{font-size:12.5px; line-height:1.35}
   .left,.right{position:static; top:auto}
   /* the columns own the scrollbars, so keep them unobtrusive */
   .left,main,.right{scrollbar-width:thin}
+  /* The search box and the Class Calendar header stay PUT; only the list
+     of dates scrolls under them (2026-10-18, Nico). The column itself
+     therefore stops being the scroller -- it was carrying search box,
+     header, legend and list up together -- and hands that job to ul.dl.
+     min-height:0 on both the card and the list is what lets a flex child
+     shrink below its content height and actually scroll. */
+  .right{overflow:hidden}
+  .right > .searchwrap{flex:none}
+  .right > #deadlines{flex:1 1 auto; min-height:0; display:flex;
+    flex-direction:column}
+  #deadlines > ul.dl{flex:1 1 auto; min-height:0; overflow-y:auto;
+    overscroll-behavior:contain; scrollbar-width:thin}
   /* the search results are positioned by site.js here -- see place() */
   .results{top:auto; right:auto}
 }

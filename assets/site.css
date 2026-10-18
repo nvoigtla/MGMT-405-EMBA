@@ -600,9 +600,13 @@ ul.items a:hover{text-decoration-color:var(--gold)}
 .pcard.topics .modlink:hover{text-decoration-style:solid}
 /* the small "Show Detail" box on hover */
 .pcard.topics .modlink::after{
-  content:"Show Detail"; position:absolute; left:50%; bottom:calc(100% + 7px);
+  /* the module number comes off the trigger's own data-mod, so the hint
+     names the module it will open (2026-10-18, Nico) */
+  content:"Show Detail on Module " attr(data-mod);
+  position:absolute; left:50%; bottom:calc(100% + 7px);
   transform:translateX(-50%); white-space:nowrap;
-  background:var(--navy); color:#fff; font-size:12px; font-style:normal;
+  background:var(--cream); color:var(--navy); border:1.5px solid var(--navy);
+  font-size:12px; font-style:normal;
   font-weight:600; letter-spacing:.02em; padding:4px 9px; border-radius:5px;
   box-shadow:0 2px 7px rgba(0,0,0,.26);
   opacity:0; visibility:hidden; transition:opacity .12s ease;

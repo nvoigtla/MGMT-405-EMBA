@@ -458,6 +458,38 @@
   function initModDetail() {
     var opener = null;
 
+    /* the hover hint, parked on <body> so no card can clip it */
+    var hint = document.createElement("div");
+    hint.id = "modhint";
+    document.body.appendChild(hint);
+
+    function hintOff() { hint.classList.remove("on"); }
+
+    function hintOn(t) {
+      hint.textContent = "Show Detail on Module " + t.getAttribute("data-mod");
+      hint.classList.add("on");
+      /* measure AFTER the text is in, then clamp into the viewport */
+      var r = t.getBoundingClientRect();
+      var w = hint.offsetWidth, h = hint.offsetHeight;
+      var left = Math.min(Math.max(6, r.left + r.width / 2 - w / 2),
+                          document.documentElement.clientWidth - w - 6);
+      var top = r.top - h - 7;
+      if (top < 6) { top = r.bottom + 7; }   /* flip under when it would clip */
+      hint.style.left = Math.round(left) + "px";
+      hint.style.top = Math.round(top) + "px";
+    }
+
+    document.addEventListener("mouseover", function (e) {
+      var t = e.target.closest ? e.target.closest(".modlink") : null;
+      if (t) { hintOn(t); } else if (!hint.contains(e.target)) { hintOff(); }
+    });
+    document.addEventListener("focusin", function (e) {
+      var t = e.target.closest ? e.target.closest(".modlink") : null;
+      if (t) { hintOn(t); } else { hintOff(); }
+    });
+    window.addEventListener("scroll", hintOff, true);
+    window.addEventListener("resize", hintOff);
+
     function show(dlg, from) {
       opener = from || null;
       dlg.hidden = false;
@@ -480,7 +512,7 @@
       var t = e.target.closest ? e.target.closest(".modlink") : null;
       if (t) {
         var dlg = document.getElementById("moddlg-" + t.getAttribute("data-mod"));
-        if (dlg) { e.preventDefault(); show(dlg, t); }
+        if (dlg) { e.preventDefault(); hintOff(); show(dlg, t); }
         return;
       }
       /* the X, or the backdrop -- but not the panel itself */

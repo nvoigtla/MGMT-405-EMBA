@@ -450,6 +450,54 @@
                       - list.getBoundingClientRect().top - 6;
   }
 
+  /* "Module N" in Topics Covered opens that module's agenda (2026-10-18,
+     Nico). The dialogs are already on the page, one per module named
+     there; this only shows and hides them. Escape and a click on the
+     backdrop close, as well as the X -- and focus goes back to the
+     trigger that opened it, so the keyboard does not lose its place. */
+  function initModDetail() {
+    var opener = null;
+
+    function show(dlg, from) {
+      opener = from || null;
+      dlg.hidden = false;
+      var x = dlg.querySelector(".moddlg-x");
+      if (x) { x.focus(); }
+    }
+
+    function hide(dlg) {
+      dlg.hidden = true;
+      if (opener) { opener.focus(); opener = null; }
+    }
+
+    function openDialogs() {
+      return Array.prototype.filter.call(
+        document.querySelectorAll(".moddlg"),
+        function (d) { return !d.hidden; });
+    }
+
+    document.addEventListener("click", function (e) {
+      var t = e.target.closest ? e.target.closest(".modlink") : null;
+      if (t) {
+        var dlg = document.getElementById("moddlg-" + t.getAttribute("data-mod"));
+        if (dlg) { e.preventDefault(); show(dlg, t); }
+        return;
+      }
+      /* the X, or the backdrop -- but not the panel itself */
+      var x = e.target.closest ? e.target.closest(".moddlg-x") : null;
+      if (x) { hide(x.closest(".moddlg")); return; }
+      if (e.target.classList && e.target.classList.contains("moddlg")) {
+        hide(e.target);
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") { return; }
+      var open = openDialogs();
+      if (open.length) { e.stopPropagation(); hide(open[open.length - 1]); }
+    });
+  }
+
   function initSidebar() {
     var btn = document.getElementById("sidebtn");
     if (!btn) { return; }
@@ -665,6 +713,7 @@
     /* after the list has been filtered and laid out, so the measurement
        is taken against what is actually on screen */
     initCalScroll();
+    initModDetail();
     initOpeners();
 
     var btn = document.getElementById("viewmode");

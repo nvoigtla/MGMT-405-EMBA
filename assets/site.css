@@ -585,6 +585,66 @@ ul.items a:hover{text-decoration-color:var(--gold)}
 }
 .pcard.due .upload a{font-weight:700; color:var(--ink)}
 
+/* ===== Topics Covered: coverage note, and the module-agenda dialog ===== */
+/* how the module is covered that week -- a quiet aside, not a second claim */
+.pcard.topics .how{color:var(--ink-2); font-style:italic}
+
+/* "Module N" as a trigger. A button, so it is reachable by keyboard, but
+   it has to read as part of the sentence -- hence the reset. */
+.pcard.topics .modlink{
+  font:inherit; color:inherit; background:none; border:0; padding:0;
+  cursor:pointer; position:relative;
+  text-decoration:underline; text-decoration-style:dotted;
+  text-underline-offset:3px; text-decoration-color:var(--gold);
+}
+.pcard.topics .modlink:hover{text-decoration-style:solid}
+/* the small "Show Detail" box on hover */
+.pcard.topics .modlink::after{
+  content:"Show Detail"; position:absolute; left:50%; bottom:calc(100% + 7px);
+  transform:translateX(-50%); white-space:nowrap;
+  background:var(--navy); color:#fff; font-size:12px; font-style:normal;
+  font-weight:600; letter-spacing:.02em; padding:4px 9px; border-radius:5px;
+  box-shadow:0 2px 7px rgba(0,0,0,.26);
+  opacity:0; visibility:hidden; transition:opacity .12s ease;
+}
+.pcard.topics .modlink:hover::after,
+.pcard.topics .modlink:focus-visible::after{opacity:1; visibility:visible}
+@media (hover:none){
+  /* no hover on a touch screen, so the hint would never leave once shown */
+  .pcard.topics .modlink::after{display:none}
+}
+
+/* the dialog itself */
+.moddlg{position:fixed; inset:0; z-index:60; display:flex;
+  align-items:center; justify-content:center; padding:18px;
+  background:rgba(11,43,78,.45)}
+.moddlg-bx{position:relative; background:var(--surface); color:var(--ink);
+  border:2px solid var(--navy); border-radius:12px;
+  box-shadow:0 14px 40px rgba(0,0,0,.3);
+  width:min(620px,100%); max-height:min(80vh,720px); overflow-y:auto;
+  padding:17px 21px 19px}
+.moddlg-x{position:absolute; top:7px; right:9px; width:32px; height:32px;
+  font:400 25px/1 system-ui,sans-serif; color:var(--ink-2);
+  background:none; border:0; border-radius:6px; cursor:pointer}
+.moddlg-x:hover{background:var(--surface-2); color:var(--ink)}
+.moddlg-hd{margin:0 0 11px; font-size:15px; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2)}
+.moddlg-hd span{display:block; margin-top:2px; font-size:21px;
+  letter-spacing:0; text-transform:none; color:var(--ink)}
+ul.magenda{list-style:none; margin:0; padding:0; counter-reset:ag}
+ul.magenda li{padding:7px 0 7px 38px; position:relative;
+  border-top:1px solid var(--rule)}
+ul.magenda li.main::before{counter-increment:ag; content:counter(ag);
+  position:absolute; left:0; top:8px; width:25px; height:25px;
+  border-radius:50%; background:var(--gold); color:var(--navy);
+  font-size:13.5px; font-weight:700; display:grid; place-items:center}
+ul.magenda li.sub{padding-left:62px}
+ul.magenda li.sub::before{content:"\2013"; position:absolute; left:40px;
+  top:7px; color:var(--ink-3)}
+ul.magenda .t{display:block; font-weight:700; font-size:16px}
+ul.magenda .d{display:block; margin-top:1px; font-size:14.5px;
+  color:var(--ink-2)}
+
 /* ============================== phones ============================== */
 /* A long header line (the class times and room) has to be able to wrap. */
 .box-hd{flex-wrap:wrap}

@@ -618,6 +618,9 @@ ul.items a:hover{text-decoration-color:var(--gold)}
 .moddlg{position:fixed; inset:0; z-index:60; display:flex;
   align-items:center; justify-content:center; padding:18px;
   background:rgba(11,43,78,.45)}
+/* a class selector beats the hidden attribute's UA display:none, so every
+   dialog rendered at once until this was added (2026-10-18) */
+.moddlg[hidden]{display:none}
 .moddlg-bx{position:relative; background:var(--surface); color:var(--ink);
   border:2px solid var(--navy); border-radius:12px;
   box-shadow:0 14px 40px rgba(0,0,0,.3);

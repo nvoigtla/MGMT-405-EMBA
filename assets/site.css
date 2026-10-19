@@ -651,6 +651,11 @@ ul.magenda .t{display:block; font-weight:700; font-size:16px}
 ul.magenda .d{display:block; margin-top:1px; font-size:14.5px;
   color:var(--ink-2)}
 
+/* a continuation line inside an exam bullet -- the midterm's two TA
+   windows sit under their sentence (2026-10-18) */
+.pcard.exam .exsub{display:block; margin-top:2px; padding-left:14px;
+  font-weight:600}
+
 /* ============================== phones ============================== */
 /* A long header line (the class times and room) has to be able to wrap. */
 .box-hd{flex-wrap:wrap}

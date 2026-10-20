@@ -22,6 +22,8 @@
   --shadow:0 1px 2px rgba(11,43,78,.06), 0 6px 18px rgba(11,43,78,.07);
 
   /* category / header cards */
+  /* exam practice: the palette's cream, as the exam rows use */
+  --card-exam:var(--cream);
   --card-video:var(--palegold);
   --card-podcast:var(--podgray);
   --card-read:#FFFFFF;
@@ -372,6 +374,7 @@ img.zoom{display:block; height:auto}
 .cat{border-radius:10px; overflow:hidden; box-shadow:var(--shadow-sm);
   border:1px solid var(--rule)}
 .cat-bd{padding:8px 15px 12px; color:var(--card-ink)}
+.cat.exam .cat-bd{background:var(--card-exam)}
 .cat.video .cat-bd{background:var(--card-video)}
 .cat.podcast .cat-bd{background:var(--card-podcast)}
 .cat.read .cat-bd{background:var(--card-read)}

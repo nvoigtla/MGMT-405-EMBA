@@ -403,6 +403,14 @@ ul.items li{
 }
 ul.items .g{color:var(--gold); font-size:11.5px; text-align:center; line-height:1.6}
 ul.items li.note{color:var(--ink-2); font-style:italic}
+/* An EXTRA (Module 4's iPad notes) hangs UNDER its module's Slides row as
+   a sub-point (2026-10-25, Nico). The row is a 17px + 9px grid, so 26px of
+   left padding lands its glyph exactly under the parent's TEXT, and the
+   type steps down one size. The selector is more specific than the phone
+   override on ul.items .txt, so the smaller size survives there too. */
+ul.items li.sub{padding-left:26px; padding-top:1px; padding-bottom:1px}
+ul.items li.sub .txt{font-size:14px}
+ul.items li.sub .g{font-size:10px}
 ul.items li.topic .txt{font-weight:700}
 ul.items .txt{font-size:16px}
 ul.items a{text-decoration:underline; text-decoration-thickness:1px;
